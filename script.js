@@ -1,5 +1,10 @@
+const cors = require('cors');
+app.use(
+  cors({
+    origin: 'http://127.0.0.1:8080/'
+  })
+);
 let civs = {}
-// getLeaderboard
 
 // Setting the community steam IDs. Move this to a .env file before going live
 let community = [
@@ -19,18 +24,19 @@ let community = [
 ]
 // Console log the error if populateCivs doesnt run
 // populateCivs().catch( error => {
-//   console.log(error.error)
-// })
-
-// Assigning game civs from API to local memory so that I can get the civ name with only a civ ID
-async function populateCivs () {
-  // not sure why I need 2 awaits in the line below. it breaks with just 1 
-  const response = await (await fetch('https://aoe2.net/api/strings?game=aoe2de&language=en')).json()
-  response['civ'].forEach((civ) => {
-    civs[civ['id']] = civ['string']
-  });
-}
-
+  //   console.log(error.error)
+  // })
+  
+  // Assigning game civs from API to local memory so that I can get the civ name with only a civ ID
+  async function populateCivs () {
+    // not sure why I need 2 awaits in the line below. it breaks with just 1 
+    const response = await (await fetch('https://aoe2.net/api/strings?game=aoe2de&language=en')).json()
+    response['civ'].forEach((civ) => {
+      civs[civ['id']] = civ['string']
+    });
+  }
+  
+  // getLeaderboard
 // getLeaderboard().catch( error => {
 //   console.log(error.error)
 // })
@@ -60,6 +66,14 @@ function insertPlayersIntoLeaderboard (gbLeaderboard) {
   });
 }
 
+getCurrentMatches()
+
 async function getCurrentMatches () {
-  const response = await (await fetch(''))
+  console.log('getting current matches..')
+  const date = Date.now()-10800000
+  console.log(date)
+  const response = await (await fetch('https://aoe2.net/api/matches?game=aoe2de&count=10&since=1647610766'))
+  const response2 = await (await fetch(`https://aoe2.net/api/matches?game=aoe2de&count=10&since=${date}`))
+  console.log(response)
+  console.log(response2)
 }
