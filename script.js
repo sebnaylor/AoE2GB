@@ -1,10 +1,8 @@
-// const cors = require('cors');
-// app.use(
-//   cors({
-//     origin: 'http://127.0.0.1:8080/'
-//   })
-// );
 let civs = {}
+let mapTypes = {}
+let mapSizes = {}
+let gameTypes = {}
+let leaderboardTypes = {}
 
 // Setting the community steam IDs. Move this to a .env file before going live
 let community = [
@@ -21,26 +19,52 @@ let community = [
   {name:'Bot Marley', steam_id:'76561198056640339'},
   {name:'Hallis', steam_id:'76561198061054857'},
   {name:'Steak', steam_id:'76561198040347770'},
-  {name:'CurrentMatchesTest', steam_id: '76561198104793947'}
+  {name:'Squeaker', steam_id:'76561198124562338'},
+  {name:'CurrentMatchesTest', steam_id: '76561198104793947'},
+  {name:'seafood', steam_id: '76561198350566117'},
+  {name:'Canary', steam_id: '76561199043818620'},
+  {name:'yummy', steam_id: '76561198863514740'},
+  {name:'Ozone', steam_id: '76561198826220092'},
+  {name:'Jordan23', steam_id: '76561198400058723'},
+  {name:'Vilese', steam_id: '76561198325239137'},
+
 ]
 // Console log the error if populateCivs doesnt run
-// populateCivs().catch( error => {
-  //   console.log(error.error)
-  // })
+populateCivs().catch( error => {
+    console.log(error.error)
+  })
+
+  // Assigning civs, map types and map sizes from API to local memory so that I can get strings with just ID without any more API queries
+async function populateCivs () {
+  // not sure why I need 2 awaits in the line below. it breaks with just 1 
+  const response = await (await fetch('https://aoe2.net/api/strings?game=aoe2de&language=en')).json()
+  response['civ'].forEach((civ) => {
+    civs[civ['id']] = civ['string']
+  });
+  response['map_type'].forEach((mapType) => {
+    mapTypes[mapType['id']] = mapType['string']
+  });
+  response['map_size'].forEach((mapSize) => {
+    mapSizes[mapSize['id']] = mapSize['string']
+  });
+  response['game_type'].forEach((gameType) =>{
+    gameTypes[gameType['id']] = gameType['string']
+  });
+  response['leaderboard'].forEach((leaderboardType) =>{
+    leaderboardTypes[leaderboardType['id']] = leaderboardType['string']
+  })
+}
+
+console.log('civs', civs)
+console.log('map types', mapTypes)
+console.log('mapSizes', mapSizes)
+console.log('gameTypes', gameTypes)
+console.log('leaderboardTypes', leaderboardTypes)
   
-  // Assigning game civs from API to local memory so that I can get the civ name with only a civ ID
-  async function populateCivs () {
-    // not sure why I need 2 awaits in the line below. it breaks with just 1 
-    const response = await (await fetch('https://aoe2.net/api/strings?game=aoe2de&language=en')).json()
-    response['civ'].forEach((civ) => {
-      civs[civ['id']] = civ['string']
-    });
-  }
-  
-  // getLeaderboard
-// getLeaderboard().catch( error => {
-//   console.log(error.error)
-// })
+  getLeaderboard
+getLeaderboard().catch( error => {
+  console.log(error.error)
+})
 
 async function getLeaderboard () {
   const response = await (await fetch('https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=1&count=3000')).json()
@@ -76,10 +100,10 @@ async function getCurrentMatches () {
   // console.log(dateString)
 
   // need to update this url with current epoch - 3 hours
-  fetch('https://aoe2.net/api/matches?game=aoe2de&count=10&since=1647610766')
+  fetch('https://aoe2.net/api/matches?game=aoe2de&count=10&since=1647710738')
   .then(response => response.json())
   .then(currentMatches => {
-    console.log(currentMatches)
+    console.log('current matches', currentMatches)
     filterCommunityMatches(currentMatches)
   });
 
@@ -88,8 +112,6 @@ async function getCurrentMatches () {
 let gbMatches = []
 // this function wil take the community and a global list of current matches and filter to only show matches with community players
 function filterCommunityMatches(globalMatches) {
-  console.log('global matches:')
-  console.log(globalMatches)
   globalMatches.forEach((match) => {
     return community.some((communityPlayer) => {
       match['players'].forEach((player) => {
@@ -102,5 +124,18 @@ function filterCommunityMatches(globalMatches) {
       });
     });
   });
+  console.log(gbMatches) 
+  insertLiveGames(gbMatches)
 }
-console.log(gbMatches)
+
+
+function insertLiveGames (gbMatches) {
+  gbMatches.forEach((match) => {
+    document.getElementById('current-games-list').insertAdjacentHTML("beforeend", `<div class="live-game"><p>No. of players: ${match['players'].length}. Map type: ${mapTypes[match['map_type']]}</p></div>`);
+  });
+}
+
+// this function will check who's playing a live game and insert the match into the current games section
+function insertPlayersIntoStatusTables (gbMatches) {
+
+}
