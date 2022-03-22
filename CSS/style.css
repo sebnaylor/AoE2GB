@@ -40,32 +40,26 @@ h1, h2, h3, h4, h5, h6, p, li {
 
 .players {
 	background-color: var(--sectioncolor);
-	margin: 3px;
+	margin: 8px;
 	flex: 1;
 }
 
 .leaderboard {
 	background-color: var(--sectioncolor);
-	margin: 3px;
-	flex: 1;
-}
-
-.current-games {
-	background-color: var(--pagecolor);
-	margin: 3px;
+	margin: 8px;
 	flex: 1;
 }
 
 .recent-achievements {
 	background-color: var(--sectioncolor);
-	margin: 3px;
+	margin: 8px;
 	flex: 1;
 }
 
 
 .chat {
 	background-color: var(--sectioncolor);
-	margin: 3px;
+	margin: 8px;
 	flex: 1;
 }
 
@@ -81,33 +75,44 @@ h1, h2, h3, h4, h5, h6, p, li {
 }
 .p1 {
 	background-color: var(--p1color);
+	font-size: x-large;
 }
 
 .p2 {
 	background-color: var(--p2color);
+	font-size: x-large;
 }
 
 .p3 {
 	background-color: var(--p3color);
+	font-size: x-large;
+	color: #008917
 }
 
 .p4 {
 	background-color: var(--p4color);
+	font-size: x-large;
+	color: #938200;
 }
 
 .p5 {
 	background-color: var(--p5color);
+	font-size: x-large;
+	color: #028C8B
 }
 
 .p6 {
 	background-color: var(--p6color);
+	font-size: x-large;
 }
 
 .p7 {
 	background-color: var(--p7color);
+	font-size: x-large;
 }
 
 .p8 {
 	background-color: var(--p8color);
+	font-size: x-large;
 }
 

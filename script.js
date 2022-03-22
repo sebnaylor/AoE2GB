@@ -134,14 +134,14 @@ function insertLiveGames (gbMatches) {
     console.log('match', match)
     if (match['players'].length === 2) {
       document.getElementById('current-games').insertAdjacentHTML("beforeend",
-      `<div class="live-game-1v1">
+      `<div class="live-game">
         <div class="game-header">
           <img src="assets/images/Civs/${civs[match['players'][0]['civ']]}.png" alt="${civs[match['players'][0]['civ']]} civilisation">
-          <p class="player p1">1</p>
+          <p class="player p${match['players'][0]['color']}">${match['players'][0]['color']}</p>
           <h3>${match['players'][0]['name']}</h3>
           <h2>Vs</h2>
           <h3>${match['players'][1]['name']}</h3>
-          <p class="player p2">2</p>
+          <p class="player p${match['players'][1]['color']}">${match['players'][1]['color']}</p>
           <img src="assets/images/Civs/${civs[match['players'][1]['civ']]}.png" alt="${civs[match['players'][0]['civ']]} civilisation">
         </div>
         <div class="elo">
@@ -155,17 +155,62 @@ function insertLiveGames (gbMatches) {
           <img src="assets/images/Flags/${match['players'][1]['country']}.png" alt="${match['players'][1]['country']} Flag">
         </div>
         <div class="game-info">
-          <p>Map: ${mapTypes[match['map_type']]} | Server: ${match['server']} | <a href="#">Spectate</a></p>
+          <p>Map: ${mapTypes[match['map_type']]} | Server: ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
         </div>
         <div class="game-time">
           <p>Started ${timeElapsed(match['started'])}m ago</p>
-        </div>
-      `)
-    } else {
+        </div>`)
+    } else if (match['players'].length === 4){
       document.getElementById('current-games').insertAdjacentHTML("beforeend",
-      `<p>TG </p>`
+      `
+      <div class="live-game">
+        <div class="team-game-header">
+          <h3>Team 1</h3>
+          <h2>Vs</h2>
+          <h3>Team 2</h3>
+        </div>
+        <div class="team-game-player-row">
+          <img id="country-flag" src="assets/images/Flags/${match['players'][0]['country']}.png" alt="${match['players'][0]['country']} Flag">
+          <img src="assets/images/Civs/${civs[match['players'][0]['civ']]}.png" alt="${civs[match['players'][0]['civ']]}">
+          <p class="player p${match['players'][0]['color']}">${match['players'][0]['color']}</p>
+          <p>${match['players'][0]['name']}</p>
+          <p>${match['players'][1]['name']}</p>
+          <p class="player p${match['players'][1]['color']}">${match['players'][1]['color']}</p>
+          <img src="assets/images/Civs/${civs[match['players'][1]['civ']]}.png" alt="${civs[match['players'][1]['civ']]}">
+          <img id="country-flag" src="assets/images/Flags/${match['players'][1]['country']}.png" alt="${match['players'][1]['country']} Flag">
+        </div>
+        <div class="team-game-player-row">
+          <img id="country-flag" src="assets/images/Flags/${match['players'][2]['country']}.png" alt="${match['players'][2]['country']} Flag">
+          <img src="assets/images/Civs/${civs[match['players'][2]['civ']]}.png" alt="${civs[match['players'][2]['civ']]}">
+          <p class="player p${match['players'][2]['color']}">${match['players'][2]['color']}</p>
+          <p>${match['players'][2]['name']}</p>
+          <p>${match['players'][3]['name']}</p>
+          <p class="player p${match['players'][3]['color']}">${match['players'][3]['color']}</p>
+          <img src="assets/images/Civs/${civs[match['players'][3]['civ']]}.png" alt="${civs[match['players'][0]['civ']]}">
+          <img id="country-flag" src="assets/images/Flags/${match['players'][3]['country']}.png" alt="${match['players'][0]['country']} Flag">
+        </div>
+        <div class="elo">
+          <p>2905</p>
+          <p>ELO (avg)</p>
+          <p>3045</p>
+        </div>
+        <div class="game-info">
+          <p><i class="fa-solid fa-earth-americas"></i> Arabia | Server: UK West | Spectate</p>
+        </div>
+        <div class="game-time">
+          <p>Started 5m ago</p>
+        </div>
+      </div>
+    </div>
+      `
       )
-    };  
+    } else if (match['players'].length === 6){
+
+    }  else if (match['players'].length === 8){
+
+    } else {
+      // code for odd number of players in a match
+    }
   });
 }
 

@@ -1,15 +1,26 @@
-.live-game-1v1 {
+.current-games {
+	background-color: var(--pagecolor);
+	margin: 8px;
+	flex: 1;
+}
+
+.live-game {
 	background-color: var(--sectioncolor);
 	border-radius: 5px;
 	display: flex;
 	flex-direction: column;
-	margin: 10px auto;
+	margin: 8px auto;
 	justify-content: space-evenly;
-	
+	padding: 8px 8px;
 }
 
-.live-game-1v1 * {
-	margin: 0px 5px;
+.live-game * {
+	margin: 0px 8px;
+}
+
+.live-game img {
+	width: 25px;
+	height: 25px;
 }
 
 .game-header {
@@ -33,22 +44,36 @@
 	display: flex;
 	justify-content: center;
 	max-width: 500px;
-	
 }
 
-.country img {
-width: 25px;
-height: 18px
+#country-flag {
+	width: 25px;
+	height: 18px;
 }
 
 .game-info {
 	display: flex;
 	justify-content: center;
 	max-width: 500px;
+	margin: 4px auto;
 }
 
 .game-time {
 	display: flex;
 	justify-content: center;
 	max-width: 500px;
+	margin: 4px auto;
+}
+
+.team-game-header {
+	display: flex;
+	justify-content: center;
+	max-width: 500px;
+}
+
+.team-game-player-row {
+	display: flex;
+	justify-content: center;
+	max-width: 500px;
+	margin: 4px auto;
 }
