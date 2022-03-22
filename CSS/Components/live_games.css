@@ -1,9 +1,11 @@
 .live-game-1v1 {
+	background-color: var(--sectioncolor);
+	border-radius: 5px;
 	display: flex;
 	flex-direction: column;
-	margin: 0 auto;
-	width: 90%;
+	margin: 10px auto;
 	justify-content: space-evenly;
+	
 }
 
 .live-game-1v1 * {
