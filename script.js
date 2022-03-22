@@ -27,7 +27,7 @@ let community = [
   {name:'Ozone', steam_id: '76561198826220092'},
   {name:'Jordan23', steam_id: '76561198400058723'},
   {name:'Vilese', steam_id: '76561198325239137'},
-
+  {name:'Meteor', steam_id: '76561198399553801'}
 ]
 // Console log the error if populateCivs doesnt run
 populateCivs().catch( error => {
@@ -100,7 +100,7 @@ async function getCurrentMatches () {
   // console.log(dateString)
 
   // need to update this url with current epoch - 3 hours
-  fetch('https://aoe2.net/api/matches?game=aoe2de&count=10&since=1647710738')
+  fetch('https://aoe2.net/api/matches?game=aoe2de&count=100&since=1647710738')
   .then(response => response.json())
   .then(currentMatches => {
     console.log('current matches', currentMatches)
@@ -131,11 +131,98 @@ function filterCommunityMatches(globalMatches) {
 
 function insertLiveGames (gbMatches) {
   gbMatches.forEach((match) => {
-    document.getElementById('current-games-list').insertAdjacentHTML("beforeend", `<div class="live-game"><p>No. of players: ${match['players'].length}. Map type: ${mapTypes[match['map_type']]}</p></div>`);
+    console.log('match', match)
+    if (match['players'].length === 2) {
+      document.getElementById('current-games').insertAdjacentHTML("beforeend",
+      `<div class="live-game">
+        <div class="game-header">
+          <img src="assets/images/Civs/${civs[match['players'][0]['civ']]}.png" alt="${civs[match['players'][0]['civ']]} civilisation">
+          <p class="player p${match['players'][0]['color']}">${match['players'][0]['color']}</p>
+          <h3>${match['players'][0]['name']}</h3>
+          <h2>Vs</h2>
+          <h3>${match['players'][1]['name']}</h3>
+          <p class="player p${match['players'][1]['color']}">${match['players'][1]['color']}</p>
+          <img src="assets/images/Civs/${civs[match['players'][1]['civ']]}.png" alt="${civs[match['players'][0]['civ']]} civilisation">
+        </div>
+        <div class="elo">
+          <p>${match['players'][0]['rating']}</p>
+          <p>ELO</p>
+          <p>${match['players'][1]['rating']}</p>
+        </div>
+        <div class="country">
+          <img src="assets/images/Flags/${match['players'][0]['country']}.png" alt="${match['players'][0]['country']} Flag">
+          <p>Country</p>
+          <img src="assets/images/Flags/${match['players'][1]['country']}.png" alt="${match['players'][1]['country']} Flag">
+        </div>
+        <div class="game-info">
+          <p>Map: ${mapTypes[match['map_type']]} | Server: ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+        </div>
+        <div class="game-time">
+          <p>Started ${timeElapsed(match['started'])}m ago</p>
+        </div>`)
+    } else if (match['players'].length === 4){
+      document.getElementById('current-games').insertAdjacentHTML("beforeend",
+      `
+      <div class="live-game">
+        <div class="team-game-header">
+          <h3>Team 1</h3>
+          <h2>Vs</h2>
+          <h3>Team 2</h3>
+        </div>
+        <div class="team-game-player-row">
+          <img id="country-flag" src="assets/images/Flags/${match['players'][0]['country']}.png" alt="${match['players'][0]['country']} Flag">
+          <img src="assets/images/Civs/${civs[match['players'][0]['civ']]}.png" alt="${civs[match['players'][0]['civ']]}">
+          <p class="player p${match['players'][0]['color']}">${match['players'][0]['color']}</p>
+          <p>${match['players'][0]['name']}</p>
+          <p>${match['players'][1]['name']}</p>
+          <p class="player p${match['players'][1]['color']}">${match['players'][1]['color']}</p>
+          <img src="assets/images/Civs/${civs[match['players'][1]['civ']]}.png" alt="${civs[match['players'][1]['civ']]}">
+          <img id="country-flag" src="assets/images/Flags/${match['players'][1]['country']}.png" alt="${match['players'][1]['country']} Flag">
+        </div>
+        <div class="team-game-player-row">
+          <img id="country-flag" src="assets/images/Flags/${match['players'][2]['country']}.png" alt="${match['players'][2]['country']} Flag">
+          <img src="assets/images/Civs/${civs[match['players'][2]['civ']]}.png" alt="${civs[match['players'][2]['civ']]}">
+          <p class="player p${match['players'][2]['color']}">${match['players'][2]['color']}</p>
+          <p>${match['players'][2]['name']}</p>
+          <p>${match['players'][3]['name']}</p>
+          <p class="player p${match['players'][3]['color']}">${match['players'][3]['color']}</p>
+          <img src="assets/images/Civs/${civs[match['players'][3]['civ']]}.png" alt="${civs[match['players'][0]['civ']]}">
+          <img id="country-flag" src="assets/images/Flags/${match['players'][3]['country']}.png" alt="${match['players'][0]['country']} Flag">
+        </div>
+        <div class="elo">
+          <p>2905</p>
+          <p>ELO (avg)</p>
+          <p>3045</p>
+        </div>
+        <div class="game-info">
+          <p><i class="fa-solid fa-earth-americas"></i> Arabia | Server: UK West | Spectate</p>
+        </div>
+        <div class="game-time">
+          <p>Started 5m ago</p>
+        </div>
+      </div>
+    </div>
+      `
+      )
+    } else if (match['players'].length === 6){
+
+    }  else if (match['players'].length === 8){
+
+    } else {
+      // code for odd number of players in a match
+    }
   });
 }
 
 // this function will check who's playing a live game and insert the match into the current games section
 function insertPlayersIntoStatusTables (gbMatches) {
 
+}
+
+function timeElapsed (startedTime) {
+  const timeElapsed = Math.floor(((Date.now()/1000) - startedTime)/60)
+  console.log((Date.now()/1000))
+  console.dir(startedTime)
+  console.log('Time elapsed', timeElapsed, typeof timeElapsed)
+  return timeElapsed
 }
