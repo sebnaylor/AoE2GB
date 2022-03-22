@@ -46,3 +46,9 @@ height: 18px
 	justify-content: center;
 	max-width: 500px;
 }
+
+.game-time {
+	display: flex;
+	justify-content: center;
+	max-width: 500px;
+}

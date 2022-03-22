@@ -157,6 +157,9 @@ function insertLiveGames (gbMatches) {
         <div class="game-info">
           <p>Map: ${mapTypes[match['map_type']]} | Server: ${match['server']} | <a href="#">Spectate</a></p>
         </div>
+        <div class="game-time">
+          <p>Started ${timeElapsed(match['started'])}m ago</p>
+        </div>
       `)
     } else {
       document.getElementById('current-games').insertAdjacentHTML("beforeend",
@@ -171,6 +174,10 @@ function insertPlayersIntoStatusTables (gbMatches) {
 
 }
 
-function civName (id){
-  return civs[id]
+function timeElapsed (startedTime) {
+  const timeElapsed = Math.floor(((Date.now()/1000) - startedTime)/60)
+  console.log((Date.now()/1000))
+  console.dir(startedTime)
+  console.log('Time elapsed', timeElapsed, typeof timeElapsed)
+  return timeElapsed
 }
