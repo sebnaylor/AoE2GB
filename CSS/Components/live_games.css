@@ -1,0 +1,46 @@
+.live-game-1v1 {
+	display: flex;
+	flex-direction: column;
+	margin: 0 auto;
+	width: 90%;
+	justify-content: space-evenly;
+}
+
+.live-game-1v1 * {
+	margin: 0px 5px;
+}
+
+.game-header {
+	display: flex;
+	justify-content: center;
+	max-width: 500px;
+}
+
+.game-header img {
+	width: 25px;
+	height: 25px;
+}
+
+.elo {
+	display: flex;
+	justify-content: center;
+	max-width: 500px;
+}
+
+.country {
+	display: flex;
+	justify-content: center;
+	max-width: 500px;
+	
+}
+
+.country img {
+width: 25px;
+height: 18px
+}
+
+.game-info {
+	display: flex;
+	justify-content: center;
+	max-width: 500px;
+}

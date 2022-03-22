@@ -1,4 +1,4 @@
-
+@import url("components/live_games.css");
 
 :root{
 	--pagecolor:#080D1E;
@@ -75,27 +75,6 @@ h1, h2, h3, h4, h5, h6, p, li {
 	flex: 1;
 }
 
-.live-game-1v1 {
-	display: flex;
-	margin: 0 auto;
-	width: 90%;
-	justify-content: space-evenly;
-}
-
-.live-game-1v1 * {
-	margin: 0px 5px;
-}
-
-.live-game-1v1 img {
-	width: 25px;
-	height: 25px;
-}
-
-.game-header {
-	display: flex;
-	justify-content: space-between;
-	max-width: 500px;
-}
 
 .player {
 	font-size:larger;
