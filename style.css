@@ -1,3 +1,5 @@
+
+
 :root{
 	--pagecolor:#080D1E;
 	--sectioncolor:#181E2E;
@@ -12,6 +14,7 @@
 }
 
 h1, h2, h3, h4, h5, h6, p, li {
+	font-family: 'Arimo', sans-serif;
 	color: white;
 	margin: 0;
 	padding: 0;
@@ -75,6 +78,17 @@ h1, h2, h3, h4, h5, h6, p, li {
 .live-game-1v1 {
 	display: flex;
 	margin: 0 auto;
+	width: 90%;
+	justify-content: space-evenly;
+}
+
+.live-game-1v1 * {
+	margin: 0px 5px;
+}
+
+.live-game-1v1 img {
+	width: 25px;
+	height: 25px;
 }
 
 .game-header {
