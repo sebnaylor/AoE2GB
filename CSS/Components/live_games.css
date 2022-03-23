@@ -71,9 +71,13 @@
 	max-width: 500px;
 }
 
-.team-game-player-row {
+.team-game-player {
 	display: flex;
 	justify-content: center;
 	max-width: 500px;
 	margin: 4px auto;
+}
+
+.team-game-teams {
+	display: flex;
 }
