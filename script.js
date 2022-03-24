@@ -124,35 +124,73 @@ function filterCommunityMatches(globalMatches) {
       });
     });
   });
-  console.log(gbMatches) 
-  insertLiveGames(gbMatches)
+  // the line below removes duplicate matches (where 2 or more community members are playing in the same match)
+  dedupedGbMatches = [...new Set(gbMatches)]
+  console.log('GB Matches: ', dedupedGbMatches)
+  insertLiveGames(dedupedGbMatches)
 }
+// This function will take 1 match and split the players into their teams and sort them by colour
+function SortAndSplitPlayersIntoTeams(gbMatch) {
+  
+  let allPlayers = gbMatch['players']
+  console.log('all players', allPlayers)
+  let sortedPlayers = allPlayers.sort((a, b) => b['team']-a['team'])
+  let team1 = []
+  let team2 = []
+  if (allPlayers.length === 2) {
+    team1 = [allPlayers[0]]
+    team2 = [allPlayers[1]]
+  } else if (allPlayers.length === 4) {
+    team1 = [allPlayers[0],allPlayers[1]]
+    team2 = [allPlayers[2],allPlayers[3]]
 
+  } else if (allPlayers.length === 6) {
+    team1 = [allPlayers[0],allPlayers[1], allPlayers[2]]
+    team2 = [allPlayers[3],allPlayers[4], allPlayers[5]]
+    
+  } else if (allPlayers.length === 8 ) {
+    team1 = [allPlayers[0],allPlayers[1], allPlayers[2],allPlayers[3]]
+    team2 = [allPlayers[4],allPlayers[5], allPlayers[6],allPlayers[7]]
+  }
+  team1.sort((a, b) => b['color']-a['color'])
+  team2.sort((a, b) => a['color']-b['color'])
+  return [team1, team2]
+}
 
 function insertLiveGames (gbMatches) {
   gbMatches.forEach((match) => {
+    let teams = SortAndSplitPlayersIntoTeams(match)
+    let team1Player1 = teams[0][0]
+    let team1Player2 = teams[0][1]
+    let team1Player3 = teams[0][2]
+    let team1Player4 = teams[0][3]
+    let team2Player1 = teams[1][0]
+    let team2Player2 = teams[1][1]
+    let team2Player3 = teams[1][2]
+    let team2Player4 = teams[1][3]
+    console.log('teams',teams)
     console.log('match', match)
     if (match['players'].length === 2) {
       document.getElementById('current-games').insertAdjacentHTML("beforeend",
       `<div class="live-game">
         <div class="game-header">
-          <img src="assets/images/Civs/${civs[match['players'][0]['civ']]}.png" alt="${civs[match['players'][0]['civ']]} civilisation">
-          <p class="player p${match['players'][0]['color']}">${match['players'][0]['color']}</p>
-          <h3>${match['players'][0]['name']}</h3>
+          <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]} civilisation">
+          <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+          <h3>${team1Player1['name']}</h3>
           <h2>Vs</h2>
-          <h3>${match['players'][1]['name']}</h3>
-          <p class="player p${match['players'][1]['color']}">${match['players'][1]['color']}</p>
-          <img src="assets/images/Civs/${civs[match['players'][1]['civ']]}.png" alt="${civs[match['players'][0]['civ']]} civilisation">
+          <h3>${team2Player1['name']}</h3>
+          <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+          <img src="assets/images/Civs/${civs[team2Player1['civ']]}.png" alt="${civs[team2Player1['civ']]} civilisation">
         </div>
         <div class="elo">
-          <p>${match['players'][0]['rating']}</p>
+          <p>${team1Player1['rating']}</p>
           <p>ELO</p>
-          <p>${match['players'][1]['rating']}</p>
+          <p>${team2Player1['rating']}</p>
         </div>
         <div class="country">
-          <img src="assets/images/Flags/${match['players'][0]['country']}.png" alt="${match['players'][0]['country']} Flag">
+          <img id="country-flag" src="assets/images/Flags/${team1Player1['country']}.png" alt="${team1Player1['country']} Flag">
           <p>Country</p>
-          <img src="assets/images/Flags/${match['players'][1]['country']}.png" alt="${match['players'][1]['country']} Flag">
+          <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="${team2Player1['country']} Flag">
         </div>
         <div class="game-info">
           <p>Map: ${mapTypes[match['map_type']]} | Server: ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
@@ -160,54 +198,90 @@ function insertLiveGames (gbMatches) {
         <div class="game-time">
           <p>Started ${timeElapsed(match['started'])}m ago</p>
         </div>`)
-    } else if (match['players'].length === 4){
-    //   document.getElementById('current-games').insertAdjacentHTML("beforeend",
-    //   `
-    //   <div class="live-game">
-    //     <div class="team-game-header">
-    //       <h3>Team 1</h3>
-    //       <h2>Vs</h2>
-    //       <h3>Team 2</h3>
-    //     </div>
-    //     <div class="team-game-player-row">
-    //       <img id="country-flag" src="assets/images/Flags/${match['players'][0]['country']}.png" alt="${match['players'][0]['country']} Flag">
-    //       <img src="assets/images/Civs/${civs[match['players'][0]['civ']]}.png" alt="${civs[match['players'][0]['civ']]}">
-    //       <p class="player p${match['players'][0]['color']}">${match['players'][0]['color']}</p>
-    //       <p>${match['players'][0]['name']}</p>
-    //       <p>${match['players'][1]['name']}</p>
-    //       <p class="player p${match['players'][1]['color']}">${match['players'][1]['color']}</p>
-    //       <img src="assets/images/Civs/${civs[match['players'][1]['civ']]}.png" alt="${civs[match['players'][1]['civ']]}">
-    //       <img id="country-flag" src="assets/images/Flags/${match['players'][1]['country']}.png" alt="${match['players'][1]['country']} Flag">
-    //     </div>
-    //     <div class="team-game-player-row">
-    //       <img id="country-flag" src="assets/images/Flags/${match['players'][2]['country']}.png" alt="${match['players'][2]['country']} Flag">
-    //       <img src="assets/images/Civs/${civs[match['players'][2]['civ']]}.png" alt="${civs[match['players'][2]['civ']]}">
-    //       <p class="player p${match['players'][2]['color']}">${match['players'][2]['color']}</p>
-    //       <p>${match['players'][2]['name']}</p>
-    //       <p>${match['players'][3]['name']}</p>
-    //       <p class="player p${match['players'][3]['color']}">${match['players'][3]['color']}</p>
-    //       <img src="assets/images/Civs/${civs[match['players'][3]['civ']]}.png" alt="${civs[match['players'][0]['civ']]}">
-    //       <img id="country-flag" src="assets/images/Flags/${match['players'][3]['country']}.png" alt="${match['players'][0]['country']} Flag">
-    //     </div>
-    //     <div class="elo">
-    //       <p>2905</p>
-    //       <p>ELO (avg)</p>
-    //       <p>3045</p>
-    //     </div>
-    //     <div class="game-info">
-    //       <p><i class="fa-solid fa-earth-americas"></i> Arabia | Server: UK West | Spectate</p>
-    //     </div>
-    //     <div class="game-time">
-    //       <p>Started 5m ago</p>
-    //     </div>
-    //   </div>
-    // </div>
-    //   `
-    //   )
+    } else if (match['players'].length === 4) {
+      
+      
+
+    
     } else if (match['players'].length === 6){
 
     }  else if (match['players'].length === 8){
-
+      document.getElementById('current-games').insertAdjacentHTML("beforeend",
+      `
+      <div class="live-game">
+        <div class="team-game-header">
+          <h3>Team 1</h3>
+          <h2>Vs</h2>
+          <h3>Team 2</h3>
+        </div>
+      <div class="team-game-teams">
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player1['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]}">
+            <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+            <p>${team1Player1['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player2['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player2['civ']]}.png" alt="${civs[team1Player2['civ']]}">
+            <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
+            <p>${team1Player2['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player3['country']}.png" alt="${civs[team1Player3['civ']]}">
+            <img src="assets/images/Civs/${civs[team1Player3['civ']]}.png" alt="">
+            <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
+            <p>${team1Player3['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player4['country']}.png" alt="${civs[team1Player4['civ']]}">
+            <img src="assets/images/Civs/${civs[team1Player4['civ']]}.png" alt="">
+            <p class="player p${team1Player4['color']}">${team1Player4['color']}</p>
+            <p>${team1Player4['name']}</p>
+          </div>
+        </div>     
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player1['name']}</p>
+            <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player1['civ']]}.png" alt="${civs[team2Player1['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player2['name']}</p>
+            <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player2['civ']]}.png" alt="${civs[team2Player2['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player2['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player3['name']}</p>
+            <p class="player p${team2Player3['color']}">${team2Player3['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player3['civ']]}.png" alt="${civs[team2Player3['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player3['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player4['name']}</p>
+            <p class="player p${team2Player4['color']}">${team2Player4['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player4['civ']]}.png" alt="${civs[team2Player4['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player4['country']}.png" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="game-info">
+        <div class="elo">
+          <p>2905</p>
+          <p>ELO (avg)</p>
+          <p>3024</p>
+        </div>
+        <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | Server: ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+      </div>
+      <div class="game-time">
+        <p>Started 5m ago</p>
+      </div>
+    </div>
+      `
+    )
     } else {
       // code for odd number of players in a match
     }
