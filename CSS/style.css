@@ -13,6 +13,11 @@
 	--p8color:#FF8B25;
 }
 
+body {
+	margin: 0;
+	overflow-x: hidden;
+}
+
 h1, h2, h3, h4, h5, h6, p, li {
 	font-family: 'Arimo', sans-serif;
 	color: white;
@@ -25,15 +30,12 @@ h1, h2, h3, h4, h5, h6, p, li {
 	background-color: var(--sectioncolor);
 	display: flex;
 	justify-content: space-between;
-	width: 100vw;
 }
 
 .container {
 	background-color: var(--pagecolor);
 	display: flex;
 	justify-content: space-between;
-	width: 100vw;
-	height: 100vh;
 	margin: 0;
 	padding: 0;
 }
@@ -50,7 +52,7 @@ h1, h2, h3, h4, h5, h6, p, li {
 	flex: 1;
 }
 
-.recent-achievements {
+.recently-completed-games {
 	background-color: var(--sectioncolor);
 	margin: 8px;
 	flex: 1;
