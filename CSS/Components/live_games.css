@@ -53,6 +53,7 @@
 
 .game-info {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	max-width: 500px;
 	margin: 4px auto;
@@ -71,9 +72,32 @@
 	max-width: 500px;
 }
 
-.team-game-player-row {
+.team-game-player {
 	display: flex;
 	justify-content: center;
 	max-width: 500px;
 	margin: 4px auto;
+}
+
+.team-game-teams {
+	display: flex;
+}
+
+.right-align {
+	justify-content: right;
+	text-align: right;
+}
+
+.left-align {
+	justify-content: left;
+}
+
+.grid-container-team-1 {
+	display: grid;
+	grid-template-columns: 30px 30px 30px 150px;
+}
+
+.grid-container-team-2 {
+	display: grid;
+	grid-template-columns: 150px 30px 30px 30px;
 }
