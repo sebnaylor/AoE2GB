@@ -1,9 +1,16 @@
+let timeStarted = Math.floor((Date.now()/1000))
+
 let civs = {}
 let mapTypes = {}
 let mapSizes = {}
 let gameTypes = {}
 let leaderboardTypes = {}
-
+let timeNow = Math.floor(Date.now()/1000)
+let threeHrsAgo = timeNow - 1800
+let liveGbMatches = []
+let pastGbMatches = []
+// liveGbPlayers is an object because I want both the player and the match they're currently in. Player is key, match is value
+let liveGbPlayers = {}
 // Setting the community steam IDs. Move this to a .env file before going live
 let community = [
   {name:'Rhea', steam_id:'76561198259669186'},
@@ -20,7 +27,6 @@ let community = [
   {name:'Hallis', steam_id:'76561198061054857'},
   {name:'Steak', steam_id:'76561198040347770'},
   {name:'Squeaker', steam_id:'76561198124562338'},
-  {name:'CurrentMatchesTest', steam_id: '76561198104793947'},
   {name:'seafood', steam_id: '76561198350566117'},
   {name:'Canary', steam_id: '76561199043818620'},
   {name:'yummy', steam_id: '76561198863514740'},
@@ -61,7 +67,6 @@ console.log('mapSizes', mapSizes)
 console.log('gameTypes', gameTypes)
 console.log('leaderboardTypes', leaderboardTypes)
   
-  getLeaderboard
 getLeaderboard().catch( error => {
   console.log(error.error)
 })
@@ -74,9 +79,6 @@ async function getLeaderboard () {
 
 // this function wil take the community and a global leaderboard and filter to only show community players
 function filterCommunityLeaderboard (globalLeaderboard) {
-  // console.log(globalLeaderboard)
-  // console.log('community')
-  // console.log(community)
   const gbLeaderboard = globalLeaderboard.filter((player) => {
     return community.some((communityPlayer) => {
       return communityPlayer.steam_id === player.steam_id
@@ -87,47 +89,51 @@ function filterCommunityLeaderboard (globalLeaderboard) {
 
 function insertPlayersIntoLeaderboard (gbLeaderboard) {
   gbLeaderboard.forEach((player) => {
-    document.getElementById('leaderboard-list').insertAdjacentHTML("beforeend", `<li> Name: ${player.name} - ${player.rating} </li>`);
+    document.querySelector('.player-table-body').insertAdjacentHTML("beforeend", 
+    `<tr>
+      <th scope="row" class="left-align">${player['name']}</th>
+      <td>${player['rating']}</td>
+    </tr>`
+    );
   });
 }
 
 getCurrentMatches()
 
 async function getCurrentMatches () {
-  console.log('getting current matches..')
-  // const date = (Date.now()-10800000).toString
-  // const dateString = date.toString
-  // console.log(dateString)
-
-  // need to update this url with current epoch - 3 hours
-  fetch('https://aoe2.net/api/matches?game=aoe2de&count=100&since=1647710738')
+  console.log('getting current matches..', `https://aoe2.net/api/matches?game=aoe2de&count=1000&since=${threeHrsAgo}` )
+  // fetch(`https://aoe2.net/api/matches?game=aoe2de&count=100&since=1647710738`)
+  fetch(`https://aoe2.net/api/matches?game=aoe2de&count=1000&since=${threeHrsAgo}`)
   .then(response => response.json())
   .then(currentMatches => {
     console.log('current matches', currentMatches)
     filterCommunityMatches(currentMatches)
   });
-
-
 }
-let gbMatches = []
+
 // this function wil take the community and a global list of current matches and filter to only show matches with community players
 function filterCommunityMatches(globalMatches) {
   globalMatches.forEach((match) => {
     return community.some((communityPlayer) => {
       match['players'].forEach((player) => {
-        if (communityPlayer.steam_id === player.steam_id) {
-          console.log('Eureka! A match is being played right now by a community member')
-          console.log(match)
-          gbMatches.push(match)
+        if (communityPlayer.steam_id === player.steam_id && match['finished'] === null) {
+          console.log('Found a match being played by a community member')
+          liveGbMatches.push(match)
+        } else if (communityPlayer.steam_id === player.steam_id && match['finished'] != null) {
+          console.log('Found a match recently played by a community member')
+          pastGbMatches.push(match)
         }
         return communityPlayer.steam_id === player.steam_id
       });
     });
   });
   // the line below removes duplicate matches (where 2 or more community members are playing in the same match)
-  dedupedGbMatches = [...new Set(gbMatches)]
-  console.log('GB Matches: ', dedupedGbMatches)
-  insertLiveGames(dedupedGbMatches)
+  dedupedLiveGbMatches = [...new Set(liveGbMatches)]
+  dedupedPastGbMatches = [...new Set(pastGbMatches)]
+  console.log('Live GB Matches: ', dedupedLiveGbMatches)
+  console.log('Past GB Matches: ', dedupedPastGbMatches)
+  insertLiveGames(dedupedLiveGbMatches)
+  insertRecentlyCompletedGames(dedupedPastGbMatches)
 }
 // This function will take 1 match and split the players into their teams and sort them by colour
 function SortAndSplitPlayersIntoTeams(gbMatch) {
@@ -157,9 +163,12 @@ function SortAndSplitPlayersIntoTeams(gbMatch) {
   return [team1, team2]
 }
 
-function insertLiveGames (gbMatches) {
-  gbMatches.forEach((match) => {
+function insertRecentlyCompletedGames (pastGbMatches){
+  console.log('inserting recently completed games...')
+  pastGbMatches.forEach((match) => {
     let teams = SortAndSplitPlayersIntoTeams(match)
+    let team1 = teams[0]
+    let team2 = teams[1]
     let team1Player1 = teams[0][0]
     let team1Player2 = teams[0][1]
     let team1Player3 = teams[0][2]
@@ -168,10 +177,28 @@ function insertLiveGames (gbMatches) {
     let team2Player2 = teams[1][1]
     let team2Player3 = teams[1][2]
     let team2Player4 = teams[1][3]
-    console.log('teams',teams)
-    console.log('match', match)
-    if (match['players'].length === 2) {
-      document.getElementById('current-games').insertAdjacentHTML("beforeend",
+
+    let team1EloAvg = 0
+    let team2EloAvg = 0 
+    team1.forEach((player) => {
+      team1EloAvg += player['rating']
+    })
+    team1EloAvg = Math.floor(team1EloAvg/team1.length)
+    console.log('team 1 elo avg =',team1EloAvg)
+    
+    team2.forEach((player) => {
+      team2EloAvg += player['rating']
+    })
+    team2EloAvg = Math.floor(team2EloAvg/team2.length)
+    console.log('team 2 elo avg =',team2EloAvg)
+    
+    console.log('completed teams',teams)
+    console.log('completed match', match)
+
+    if (match['players'].length % 2 != 0){
+      exit
+    } else if (match['players'].length === 2) {
+      document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
       `<div class="live-game">
         <div class="game-header">
           <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]} civilisation">
@@ -193,22 +220,64 @@ function insertLiveGames (gbMatches) {
           <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="${team2Player1['country']} Flag">
         </div>
         <div class="game-info">
-          <p>Map: ${mapTypes[match['map_type']]} | Server: ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+          <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | <i class="fa-solid fa-server"></i> ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
         </div>
         <div class="game-time">
           <p>Started ${timeElapsed(match['started'])}m ago</p>
         </div>`)
     } else if (match['players'].length === 4) {
-      
-      
-
-    
+      document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
+      `<div class="live-game">
+        <div class="team-game-header">
+          <h3>Team 1</h3>
+          <h2>Vs</h2>
+          <h3>Team 2</h3>
+        </div>
+      <div class="team-game-teams">
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player1['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]}">
+            <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+            <p>${team1Player1['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player2['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player2['civ']]}.png" alt="${civs[team1Player2['civ']]}">
+            <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
+            <p>${team1Player2['name']}</p>
+          </div>
+        </div>     
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player1['name']}</p>
+            <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player1['civ']]}.png" alt="${civs[team2Player1['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player2['name']}</p>
+            <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player2['civ']]}.png" alt="${civs[team2Player2['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player2['country']}.png" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="game-info">
+        <div class="elo">
+          <p>${team1EloAvg}</p>
+          <p>ELO (avg)</p>
+          <p>${team2EloAvg}</p>
+        </div>
+        <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | <i class="fa-solid fa-server"></i> ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+      </div>
+      <div class="game-time">
+        <p>Started ${timeElapsed(match['started'])}m ago</p>
+      </div>
+    </div>`)
     } else if (match['players'].length === 6){
-
-    }  else if (match['players'].length === 8){
-      document.getElementById('current-games').insertAdjacentHTML("beforeend",
-      `
-      <div class="live-game">
+      document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
+      `<div class="live-game">
         <div class="team-game-header">
           <h3>Team 1</h3>
           <h2>Vs</h2>
@@ -234,11 +303,74 @@ function insertLiveGames (gbMatches) {
             <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
             <p>${team1Player3['name']}</p>
           </div>
+        </div>     
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player1['name']}</p>
+            <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player1['civ']]}.png" alt="${civs[team2Player1['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player2['name']}</p>
+            <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player2['civ']]}.png" alt="${civs[team2Player2['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player2['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player3['name']}</p>
+            <p class="player p${team2Player3['color']}">${team2Player3['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player3['civ']]}.png" alt="${civs[team2Player3['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player3['country']}.png" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="game-info">
+        <div class="elo">
+          <p>${team1EloAvg}</p>
+          <p>ELO (avg)</p>
+          <p>${team2EloAvg}</p>
+        </div>
+        <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | <i class="fa-solid fa-server"></i> ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+      </div>
+      <div class="game-time">
+        <p>Started ${timeElapsed(match['started'])}m ago</p>
+      </div>
+    </div>
+    `)
+    }  else if (match['players'].length === 8){
+      document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
+      `<div class="live-game">
+        <div class="team-game-header">
+          <h3>Team 1</h3>
+          <h2>Vs</h2>
+          <h3>Team 2</h3>
+        </div>
+      <div class="team-game-teams">
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player1['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]}">
+            <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+            <p class="right-align">${team1Player1['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player2['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player2['civ']]}.png" alt="${civs[team1Player2['civ']]}">
+            <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
+            <p class="right-align">${team1Player2['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player3['country']}.png" alt="${civs[team1Player3['civ']]}">
+            <img src="assets/images/Civs/${civs[team1Player3['civ']]}.png" alt="">
+            <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
+            <p class="right-align">${team1Player3['name']}</p>
+          </div>
           <div class="team-game-player grid-container-team-1">
             <img id="country-flag" src="assets/images/Flags/${team1Player4['country']}.png" alt="${civs[team1Player4['civ']]}">
             <img src="assets/images/Civs/${civs[team1Player4['civ']]}.png" alt="">
             <p class="player p${team1Player4['color']}">${team1Player4['color']}</p>
-            <p>${team1Player4['name']}</p>
+            <p class="right-align">${team1Player4['name']}</p>
           </div>
         </div>     
         <div class="team-game-team-column">
@@ -270,18 +402,276 @@ function insertLiveGames (gbMatches) {
       </div>
       <div class="game-info">
         <div class="elo">
-          <p>2905</p>
+          <p>${team1EloAvg}</p>
           <p>ELO (avg)</p>
-          <p>3024</p>
+          <p>${team2EloAvg}</p>
         </div>
-        <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | Server: ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+        <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | <i class="fa-solid fa-server"></i> ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
       </div>
       <div class="game-time">
-        <p>Started 5m ago</p>
+        <p>Started ${timeElapsed(match['started'])}m ago</p>
       </div>
     </div>
-      `
-    )
+    `)
+    } else {
+      // code for odd number of players in a match
+    }
+  });
+}
+
+function insertLiveGames (liveGbMatches) {
+  console.log('inserting live games...')
+  insertPlayersIntoStatusTables(liveGbMatches)
+  liveGbMatches.forEach((match) => {
+    let teams = SortAndSplitPlayersIntoTeams(match)
+    let team1 = teams[0]
+    let team2 = teams[1]
+    let team1Player1 = teams[0][0]
+    let team1Player2 = teams[0][1]
+    let team1Player3 = teams[0][2]
+    let team1Player4 = teams[0][3]
+    let team2Player1 = teams[1][0]
+    let team2Player2 = teams[1][1]
+    let team2Player3 = teams[1][2]
+    let team2Player4 = teams[1][3]
+    console.log('teams',teams)
+    console.log('match', match)
+    let team1EloAvg = 0
+    let team2EloAvg = 0 
+
+    team1.forEach((player) => {
+      team1EloAvg += player['rating']
+    })
+    team1EloAvg = Math.floor(team1EloAvg/team1.length)
+    console.log('team 1 elo avg =',team1EloAvg)
+    
+    team2.forEach((player) => {
+      team2EloAvg += player['rating']
+    })
+    team2EloAvg = Math.floor(team2EloAvg/team2.length)
+    console.log('team 2 elo avg =',team2EloAvg)
+
+    console.log('live teams',teams)
+    console.log('live match', match)
+
+    if (match['players'].length % 2 != 0){
+      exit
+    } else if (match['players'].length === 2) {
+      document.querySelector('.current-games').insertAdjacentHTML("beforeend",
+      `<div class="live-game">
+        <div class="game-header">
+          <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]} civilisation">
+          <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+          <h3>${team1Player1['name']}</h3>
+          <h2>Vs</h2>
+          <h3>${team2Player1['name']}</h3>
+          <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+          <img src="assets/images/Civs/${civs[team2Player1['civ']]}.png" alt="${civs[team2Player1['civ']]} civilisation">
+        </div>
+        <div class="elo">
+          <p>${team1Player1['rating']}</p>
+          <p>ELO</p>
+          <p>${team2Player1['rating']}</p>
+        </div>
+        <div class="country">
+          <img id="country-flag" src="assets/images/Flags/${team1Player1['country']}.png" alt="${team1Player1['country']} Flag">
+          <p>Country</p>
+          <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="${team2Player1['country']} Flag">
+        </div>
+        <div class="game-info">
+          <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | <i class="fa-solid fa-server"></i> ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+        </div>
+        <div class="game-time">
+          <p>Started ${timeElapsed(match['started'])}m ago</p>
+        </div>`)
+    } else if (match['players'].length === 4) {
+      document.querySelector('.current-games').insertAdjacentHTML("beforeend",
+      `<div class="live-game">
+        <div class="team-game-header">
+          <h3>Team 1</h3>
+          <h2>Vs</h2>
+          <h3>Team 2</h3>
+        </div>
+      <div class="team-game-teams">
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player1['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]}">
+            <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+            <p class="right-align">${team1Player1['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player2['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player2['civ']]}.png" alt="${civs[team1Player2['civ']]}">
+            <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
+            <p class="right-align">${team1Player2['name']}</p>
+          </div>
+        </div>     
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player1['name']}</p>
+            <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player1['civ']]}.png" alt="${civs[team2Player1['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player2['name']}</p>
+            <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player2['civ']]}.png" alt="${civs[team2Player2['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player2['country']}.png" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="game-info">
+        <div class="elo">
+          <p>${team1EloAvg}</p>
+          <p>ELO (avg)</p>
+          <p>${team2EloAvg}</p>
+        </div>
+        <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | <i class="fa-solid fa-server"></i> ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+      </div>
+      <div class="game-time">
+        <p>Started ${timeElapsed(match['started'])}m ago</p>
+      </div>
+    </div>`)
+    } else if (match['players'].length === 6){
+      document.querySelector('.current-games').insertAdjacentHTML("beforeend",
+      `<div class="live-game">
+        <div class="team-game-header">
+          <h3>Team 1</h3>
+          <h2>Vs</h2>
+          <h3>Team 2</h3>
+        </div>
+      <div class="team-game-teams">
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player1['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]}">
+            <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+            <p class="right-align">${team1Player1['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player2['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player2['civ']]}.png" alt="${civs[team1Player2['civ']]}">
+            <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
+            <p class="right-align">${team1Player2['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player3['country']}.png" alt="${civs[team1Player3['civ']]}">
+            <img src="assets/images/Civs/${civs[team1Player3['civ']]}.png" alt="">
+            <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
+            <p class="right-align">${team1Player3['name']}</p>
+          </div>
+        </div>     
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player1['name']}</p>
+            <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player1['civ']]}.png" alt="${civs[team2Player1['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player2['name']}</p>
+            <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player2['civ']]}.png" alt="${civs[team2Player2['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player2['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player3['name']}</p>
+            <p class="player p${team2Player3['color']}">${team2Player3['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player3['civ']]}.png" alt="${civs[team2Player3['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player3['country']}.png" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="game-info">
+        <div class="elo">
+          <p>${team1EloAvg}</p>
+          <p>ELO (avg)</p>
+          <p>${team2EloAvg}</p>
+        </div>
+        <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | <i class="fa-solid fa-server"></i> ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+      </div>
+      <div class="game-time">
+        <p>Started ${timeElapsed(match['started'])}m ago</p>
+      </div>
+    </div>
+    `)
+    }  else if (match['players'].length === 8){
+      document.querySelector('.current-games').insertAdjacentHTML("beforeend",
+      `<div class="live-game">
+        <div class="team-game-header">
+          <h3>Team 1</h3>
+          <h2>Vs</h2>
+          <h3>Team 2</h3>
+        </div>
+      <div class="team-game-teams">
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player1['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]}">
+            <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+            <p class="right-align">${team1Player1['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player2['country']}.png" alt="">
+            <img src="assets/images/Civs/${civs[team1Player2['civ']]}.png" alt="${civs[team1Player2['civ']]}">
+            <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
+            <p class="right-align">${team1Player2['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player3['country']}.png" alt="${civs[team1Player3['civ']]}">
+            <img src="assets/images/Civs/${civs[team1Player3['civ']]}.png" alt="">
+            <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
+            <p class="right-align">${team1Player3['name']}</p>
+          </div>
+          <div class="team-game-player grid-container-team-1">
+            <img id="country-flag" src="assets/images/Flags/${team1Player4['country']}.png" alt="${civs[team1Player4['civ']]}">
+            <img src="assets/images/Civs/${civs[team1Player4['civ']]}.png" alt="">
+            <p class="player p${team1Player4['color']}">${team1Player4['color']}</p>
+            <p class="right-align">${team1Player4['name']}</p>
+          </div>
+        </div>     
+        <div class="team-game-team-column">
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player1['name']}</p>
+            <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player1['civ']]}.png" alt="${civs[team2Player1['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player1['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player2['name']}</p>
+            <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player2['civ']]}.png" alt="${civs[team2Player2['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player2['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player3['name']}</p>
+            <p class="player p${team2Player3['color']}">${team2Player3['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player3['civ']]}.png" alt="${civs[team2Player3['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player3['country']}.png" alt="">
+          </div>
+          <div class="team-game-player grid-container-team-2">
+            <p>${team2Player4['name']}</p>
+            <p class="player p${team2Player4['color']}">${team2Player4['color']}</p>
+            <img src="assets/images/Civs/${civs[team2Player4['civ']]}.png" alt="${civs[team2Player4['civ']]}">
+            <img id="country-flag" src="assets/images/Flags/${team2Player4['country']}.png" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="game-info">
+        <div class="elo">
+          <p>${team1EloAvg}</p>
+          <p>ELO (avg)</p>
+          <p>${team2EloAvg}</p>
+        </div>
+        <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]} | <i class="fa-solid fa-server"></i> ${match['server']} | <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+      </div>
+      <div class="game-time">
+        <p>Started ${timeElapsed(match['started'])}m ago</p>
+      </div>
+    </div>
+    `)
     } else {
       // code for odd number of players in a match
     }
@@ -289,14 +679,38 @@ function insertLiveGames (gbMatches) {
 }
 
 // this function will check who's playing a live game and insert the match into the current games section
-function insertPlayersIntoStatusTables (gbMatches) {
-
+function insertPlayersIntoStatusTables(liveGbMatches) {
+  console.log('live GB matches', liveGbMatches)
+  // iterate through each match
+  liveGbMatches.forEach ((match) => {
+    match['players'].forEach((player) =>{
+      return community.some((communityPlayer) => {
+        if (communityPlayer.steam_id === player.steam_id){
+          liveGbPlayers[player['name']] = match
+          // console.log(player)
+          // console.log(match)
+          // console.log(liveGbPlayers[player])
+        }
+      });
+    })
+  })
+  console.log(liveGbPlayers, liveGbPlayers.length)
+  keys = Object.keys(liveGbPlayers)
+  keys.forEach((playerName) => {
+    console.log(playerName,liveGbPlayers[playerName])
+    document.getElementById('player-table-body').insertAdjacentHTML("beforeend",
+    `<tr>
+      <th scope="row" class="left-align"><strong>${playerName}</strong> started a ${leaderboardTypes[liveGbPlayers[playerName]['leaderboard_id']]} ${timeElapsed(liveGbPlayers[playerName]['started'])}m ago</th>
+    </tr>`
+    )
+  })
 }
 
+
+// this function takes a start time and returns the time in minutes since the start time
 function timeElapsed (startedTime) {
   const timeElapsed = Math.floor(((Date.now()/1000) - startedTime)/60)
-  console.log((Date.now()/1000))
-  console.dir(startedTime)
-  console.log('Time elapsed', timeElapsed, typeof timeElapsed)
   return timeElapsed
 }
+let timeFinished = Math.floor((Date.now()/1000))
+console.log('time taken for JS code to execute:', timeFinished-timeStarted, 'seconds')

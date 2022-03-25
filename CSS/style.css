@@ -13,11 +13,22 @@
 	--p8color:#FF8B25;
 }
 
-h1, h2, h3, h4, h5, h6, p, li {
+body {
+	margin: 0;
+	min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6, li {
 	font-family: 'Arimo', sans-serif;
 	color: white;
 	margin: 0;
 	padding: 0;
+}
+
+p, th, td {
+	color: #C8C8C8;
+	font-weight: 400;
+
 }
 
 
@@ -25,15 +36,12 @@ h1, h2, h3, h4, h5, h6, p, li {
 	background-color: var(--sectioncolor);
 	display: flex;
 	justify-content: space-between;
-	width: 100vw;
 }
 
 .container {
 	background-color: var(--pagecolor);
 	display: flex;
 	justify-content: space-between;
-	width: 100vw;
-	height: 100vh;
 	margin: 0;
 	padding: 0;
 }
@@ -42,6 +50,8 @@ h1, h2, h3, h4, h5, h6, p, li {
 	background-color: var(--sectioncolor);
 	margin: 8px;
 	flex: 1;
+	padding: 10px;
+	margin: 10px;
 }
 
 .leaderboard {
@@ -50,10 +60,11 @@ h1, h2, h3, h4, h5, h6, p, li {
 	flex: 1;
 }
 
-.recent-achievements {
-	background-color: var(--sectioncolor);
+.recently-completed-games {
+	background-color: var(--pagecolor);
 	margin: 8px;
 	flex: 1;
+	width: 540px
 }
 
 
@@ -116,3 +127,27 @@ h1, h2, h3, h4, h5, h6, p, li {
 	font-size: x-large;
 }
 
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
+   background-color: var(--pagecolor); 
+ }
+
+ .table-striped>tbody>tr:nth-child(even)>td, 
+.table-striped>tbody>tr:nth-child(even)>th {
+   background-color: var(--sectioncolor) 
+ }
+
+.lh-side {
+	min-width: 300px;
+}
+
+.table {
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 1rem;
+	border-collapse: collapse;
+	display: table;
+	text-indent: initial;
+	border-spacing: 2px;
+	border-color: grey;
+}
