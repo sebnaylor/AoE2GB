@@ -421,6 +421,7 @@ function insertRecentlyCompletedGames (pastGbMatches){
 
 function insertLiveGames (liveGbMatches) {
   console.log('inserting live games...')
+  stopLoadingAnimation()
   insertPlayersIntoStatusTables(liveGbMatches)
   liveGbMatches.forEach((match) => {
     let teams = SortAndSplitPlayersIntoTeams(match)
@@ -610,9 +611,9 @@ function insertLiveGames (liveGbMatches) {
         <div class="team-game-team-column">
           <div class="team-game-player grid-container-team-1">
             <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="">
-            <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']]}.png" alt="${civs[team1Player1['civ']]}">
+            <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="">
             <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
-            <p class="right-align">${team1Player1['name']} TEST</p>${console.log(civs[team1Player1['civ']].toLowerCase())}
+            <p class="right-align">${team1Player1['name']}</p>
           </div>
           <div class="team-game-player grid-container-team-1">
             <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player2['country'].toLowerCase()}.png" alt="">
@@ -715,3 +716,8 @@ function timeElapsed (startedTime) {
 }
 let timeFinished = Math.floor((Date.now()/1000))
 console.log('time taken for JS code to execute:', timeFinished-timeStarted, 'seconds')
+
+function stopLoadingAnimation() {
+  console.log('stopping the loading animation')
+  document.querySelector('.loader').classList.toggle('display-none')
+}
