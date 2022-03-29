@@ -26,12 +26,19 @@ h1, h2, h3, h4, h5, h6, li {
 	padding: 0;
 }
 
+.center-align {
+	text-align: center;
+}
+
 p, th, td {
 	color: #C8C8C8;
 	font-weight: 400;
 
 }
 
+a {
+	margin: 0px
+}
 
 .navbar {
 	background-color: var(--sectioncolor);
@@ -153,4 +160,13 @@ p, th, td {
 	text-indent: initial;
 	border-spacing: 2px;
 	border-color: grey;
+}
+
+.btn {
+	text-decoration: none;
+  color: #158075;
+  border-radius: 20px;
+  border: 2px solid turquoise;
+  padding: 5px;
+  background-color: turquoise;
 }

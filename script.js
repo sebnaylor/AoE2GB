@@ -719,5 +719,5 @@ console.log('time taken for JS code to execute:', timeFinished-timeStarted, 'sec
 
 function stopLoadingAnimation() {
   console.log('stopping the loading animation')
-  document.querySelector('.loader').classList.toggle('display-none')
+  // document.querySelector('.loader').classList.toggle('display-none')
 }
