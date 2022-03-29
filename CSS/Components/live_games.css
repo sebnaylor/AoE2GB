@@ -3,6 +3,7 @@
 	margin: 8px;
 	flex: 1;
 	min-height: 100vh;
+	min-width: 470px;
 }
 
 .live-game {
