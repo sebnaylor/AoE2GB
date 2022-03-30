@@ -203,9 +203,9 @@ function insertRecentlyCompletedGames (pastGbMatches){
         <div class="game-header">
           <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]} civilisation">
           <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
-          <h3>${team1Player1['name']}</h3>
-          <h2>Vs</h2>
-          <h3>${team2Player1['name']}</h3>
+          <h4>${team1Player1['name']}</h4>
+          <h4>Vs</h4>
+          <h4>${team2Player1['name']}</h4>
           <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
           <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]} civilisation">
         </div>
@@ -229,9 +229,9 @@ function insertRecentlyCompletedGames (pastGbMatches){
       document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
       `<div class="live-game">
         <div class="team-game-header">
-          <h3>Team 1</h3>
-          <h2>Vs</h2>
-          <h3>Team 2</h3>
+          <h4>Team 1</h4>
+          <h4>Vs</h4>
+          <h4>Team 2</h4>
         </div>
       <div class="team-game-teams">
         <div class="team-game-team-column">
@@ -279,9 +279,9 @@ function insertRecentlyCompletedGames (pastGbMatches){
       document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
       `<div class="live-game">
         <div class="team-game-header">
-          <h3>Team 1</h3>
-          <h2>Vs</h2>
-          <h3>Team 2</h3>
+          <h4>Team 1</h4>
+          <h4>Vs</h4>
+          <h4>Team 2</h4>
         </div>
       <div class="team-game-teams">
         <div class="team-game-team-column">
@@ -342,9 +342,9 @@ function insertRecentlyCompletedGames (pastGbMatches){
       document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
       `<div class="live-game">
         <div class="team-game-header">
-          <h3>Team 1</h3>
-          <h2>Vs</h2>
-          <h3>Team 2</h3>
+          <h4>Team 1</h4>
+          <h4>Vs</h4>
+          <h4>Team 2</h4>
         </div>
       <div class="team-game-teams">
         <div class="team-game-team-column">
@@ -464,9 +464,9 @@ function insertLiveGames (liveGbMatches) {
         <div class="game-header">
           <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]} civilisation">
           <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
-          <h3>${team1Player1['name']}</h3>
-          <h2>Vs</h2>
-          <h3>${team2Player1['name']}</h3>
+          <h4>${team1Player1['name']}</h4>
+          <h4>Vs</h4>
+          <h4>${team2Player1['name']}</h4>
           <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
           <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]} civilisation">
         </div>
@@ -490,9 +490,9 @@ function insertLiveGames (liveGbMatches) {
       document.querySelector('.current-games').insertAdjacentHTML("beforeend",
       `<div class="live-game">
         <div class="team-game-header">
-          <h3>Team 1</h3>
-          <h2>Vs</h2>
-          <h3>Team 2</h3>
+          <h4>Team 1</h4>
+          <h4>Vs</h4>
+          <h4>Team 2</h4>
         </div>
       <div class="team-game-teams">
         <div class="team-game-team-column">
@@ -540,9 +540,9 @@ function insertLiveGames (liveGbMatches) {
       document.querySelector('.current-games').insertAdjacentHTML("beforeend",
       `<div class="live-game">
         <div class="team-game-header">
-          <h3>Team 1</h3>
-          <h2>Vs</h2>
-          <h3>Team 2</h3>
+          <h4>Team 1</h4>
+          <h4>Vs</h4>
+          <h4>Team 2</h4>
         </div>
       <div class="team-game-teams">
         <div class="team-game-team-column">
@@ -603,9 +603,9 @@ function insertLiveGames (liveGbMatches) {
       document.querySelector('.current-games').insertAdjacentHTML("beforeend",
       `<div class="live-game">
         <div class="team-game-header">
-          <h3>Team 1</h3>
-          <h2>Vs</h2>
-          <h3>Team 2</h3>
+          <h4>Team 1</h4>
+          <h4>Vs</h4>
+          <h4>Team 2</h4>
         </div>
       <div class="team-game-teams">
         <div class="team-game-team-column">
