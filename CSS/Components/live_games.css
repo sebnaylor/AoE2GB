@@ -3,8 +3,6 @@
 	margin: 8px;
 	flex: 1;
 	min-height: 100vh;
-	min-width: 450px;
-	border: 2px solid grey;
 	padding: 4px;
 }
 
@@ -15,7 +13,7 @@
 	flex-direction: column;
 	margin: 8px auto;
 	justify-content: space-evenly;
-	padding: 8px 8px;
+	padding: 8px 0px;
 	position: relative;
 }
 

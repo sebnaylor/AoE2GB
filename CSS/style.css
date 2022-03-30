@@ -21,7 +21,7 @@ body {
 
 h1, h2, h3, h4, h5, h6, li {
 	font-family: 'Arimo', sans-serif;
-	color: white;
+	color: #C8C8C8;
 	margin: 0;
 	padding: 0;
 }
@@ -58,8 +58,7 @@ a {
 	background-color: var(--sectioncolor);
 	margin: 8px;
 	flex: 1;
-	padding: 10px;
-	margin: 10px;
+	padding: 4px;
 }
 
 .leaderboard {
@@ -169,4 +168,8 @@ a {
   border: 2px solid turquoise;
   padding: 5px;
   background-color: turquoise;
+}
+
+.title {
+  font-weight: 300;
 }
