@@ -4,6 +4,7 @@
 :root{
 	--pagecolor:#080D1E;
 	--sectioncolor:#181E2E;
+  --darksectioncolor:#101626;
 	--p1color:#394EF8;
 	--p2color:#FF001B;
 	--p3color:#03FF2E;
@@ -19,8 +20,9 @@ body {
 	min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, h6, li {
-	font-family: 'Arimo', sans-serif;
+h1, h2, h3, h4, h5, h6, li, p, th, td {
+	font-family: 'Prompt', sans-serif;
+  font-weight: 300;
 	color: #C8C8C8;
 	margin: 0;
 	padding: 0;
@@ -28,12 +30,6 @@ h1, h2, h3, h4, h5, h6, li {
 
 .center-align {
 	text-align: center;
-}
-
-p, th, td {
-	color: #C8C8C8;
-	font-weight: 400;
-
 }
 
 a {
@@ -55,14 +51,14 @@ a {
 }
 
 .players {
-	background-color: var(--sectioncolor);
+	background-color: var(--pagecolor);
 	margin: 8px;
 	flex: 1;
 	padding: 4px;
 }
 
 .leaderboard {
-	background-color: var(--sectioncolor);
+	background-color: var(--pagecolor);
 	margin: 8px;
 	flex: 1;
 }
@@ -73,7 +69,6 @@ a {
 	flex: 1;
 	min-width: 470px
 }
-
 
 .chat {
 	background-color: var(--sectioncolor);
@@ -138,7 +133,7 @@ a {
 
 .table-striped>tbody>tr:nth-child(odd)>td, 
 .table-striped>tbody>tr:nth-child(odd)>th {
-   background-color: var(--pagecolor); 
+   background-color: var(--darksectioncolor); 
  }
 
  .table-striped>tbody>tr:nth-child(even)>td, 
@@ -171,5 +166,11 @@ a {
 }
 
 .title {
-  font-weight: 300;
+  font-weight: 100;
+}
+
+#logo {
+  height: 50px;
+  border-radius: 25px;
+  margin: 0px 10px;
 }
