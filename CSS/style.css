@@ -1,5 +1,5 @@
-@import url("/components/live_games.css");
-@import url("/components/loader.css");
+@import url("/css/components/live_games.css");
+@import url("/css/components/loader.css");
 
 :root{
 	--pagecolor:#080D1E;
