@@ -17,20 +17,26 @@ body {
 	min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, h6, li, p, th, td {
+body, html {
+  background-color: #1c2020;
+  height: 100%;
+  position: relative;
+}
+
+h1, h2, h3, h4, h5, h6, li, p, th, td, a {
 	font-family: 'Prompt', sans-serif;
-  font-weight: 300;
+	font-weight: 300;
 	color: #C8C8C8;
 	margin: 0;
 	padding: 0;
 }
 
-.center-align {
-	text-align: center;
+td{
+	width: 100px;
 }
 
-a {
-	margin: 0px
+.center-align {
+	text-align: center;
 }
 
 .navbar {
@@ -64,7 +70,8 @@ a {
 	background-color: var(--pagecolor);
 	margin: 8px;
 	flex: 1;
-	min-width: 470px
+	min-width: 470px;
+	padding:4px
 }
 
 .chat {
@@ -128,18 +135,30 @@ a {
 	font-size: x-large;
 }
 
-.table-striped>tbody>tr:nth-child(odd)>td, 
-.table-striped>tbody>tr:nth-child(odd)>th {
-   background-color: var(--darksectioncolor); 
- }
+#status-table>p:nth-child(odd) {
+  background-color: var(--darksectioncolor);
+	width: 250px;
+}
 
- .table-striped>tbody>tr:nth-child(even)>td, 
-.table-striped>tbody>tr:nth-child(even)>th {
-   background-color: var(--sectioncolor) 
- }
+#status-table>p:nth-child(even) {
+	background-color: var(--sectioncolor); 
+	width: 250px;
+}
+
+#leaderboard-table>tbody>tr:nth-child(even)>td, 
+#leaderboard-table>tbody>tr:nth-child(even)>th {
+  background-color: var(--sectioncolor) 
+}
+
+#leaderboard-table>tbody>tr:nth-child(odd)>td, 
+#leaderboard-table>tbody>tr:nth-child(odd)>th {
+  background-color: var(--darksectioncolor) 
+}
 
 .lh-side {
 	min-width: 300px;
+	margin: 8px 0px;
+	padding: 4px
 }
 
 .table {
@@ -172,16 +191,7 @@ a {
   margin: 0px 10px;
 }
 
-h1 {
-  color: red;
-}
 
-body, html {
-  background-color: #1c2020;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
 
 .loader {
   margin: 0 auto;
@@ -349,15 +359,6 @@ body, html {
 	display: flex;
 }
 
-.time-elapsed {
-	/* position: absolute; */
-	left: 8px;
-	top: 8px;
-	background-color: teal;
-	border-radius: 15px;
-	padding: 0px 4px;
-}
-
 .game-properties {
 	display: flex;
 	justify-content: center;
@@ -382,3 +383,31 @@ body, html {
 	display: grid;
 	grid-template-columns: 150px 30px 30px 30px;
 }
+
+.light-weight {
+	font-weight: 100;
+}
+
+.spectate-btn {
+	text-decoration: none;
+	background-color: teal;
+	border-radius: 15px;
+	padding: 0px 4px;
+	overflow: hidden;
+	white-space: nowrap;
+	transition-duration: 250ms;
+}
+
+.spectate-btn:hover {
+	color: white;
+}
+
+#about-btn:hover {
+	color: white;
+	cursor: pointer;
+}
+
+#about-btn {
+	transition-duration: 250ms
+}
+

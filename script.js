@@ -36,9 +36,13 @@ let community = [
   {name:'Vilese', steam_id: '76561198325239137'},
   {name:'Meteor', steam_id: '76561198399553801'}
 ]
+
+document.getElementById('about-btn').addEventListener('click', function() { document.getElementById('about-txt').classList.toggle("display-none") }, false);
+
 // Console log the error if populateCivs doesnt run
 populateCivs().catch( error => {
-  console.log(error.error)
+  console.log(error)
+  console.log("Write something in this function to say aoe2.net is done")
 })
 
   // Assigning civs, map types and map sizes from API to local memory so that I can get strings with just ID without any more API queries
@@ -69,12 +73,12 @@ console.log('gameTypes', gameTypes)
 console.log('leaderboardTypes', leaderboardTypes)
   
 getLeaderboard().catch( error => {
-  console.log(error.error)
+  console.log(error)
 })
 
 async function getLeaderboard () {
   const response = await (await fetch('https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=1&count=3000')).json()
-  ;let globalLeaderboard = response['leaderboard']
+  let globalLeaderboard = response['leaderboard']
   filterCommunityLeaderboard(globalLeaderboard)
 }
 
@@ -228,10 +232,10 @@ function insertRecentlyCompletedGames (pastGbMatches){
             <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="${team2Player1['country']} Flag">
           </div>
           <div class="game-properties">
-            <p class="time-elapsed">${timeElapsed(match['started'])}m ago</p>
+            <p>${timeElapsed(match['started'])}m ago</p>
             <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
             <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
           </div>
         </div>`)
       } else if (match['players'].length === 4) {
@@ -279,10 +283,10 @@ function insertRecentlyCompletedGames (pastGbMatches){
             <p>${team2EloAvg}</p>
           </div>
           <div class="game-properties">
-            <p class="time-elapsed">${timeElapsed(match['started'])}m ago</p>
+            <p>${timeElapsed(match['started'])}m ago</p>
             <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
             <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
+            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
           </div>
         </div>
       </div>`)
@@ -343,10 +347,10 @@ function insertRecentlyCompletedGames (pastGbMatches){
           <p>${team2EloAvg}</p>
         </div>
         <div class="game-properties">
-          <p class="time-elapsed">${timeElapsed(match['started'])}m ago</p>
+          <p>${timeElapsed(match['started'])}m ago</p>
           <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
           <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-          <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
+          <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
         </div>
       </div>
       `)
@@ -419,10 +423,10 @@ function insertRecentlyCompletedGames (pastGbMatches){
           <p>${team2EloAvg}</p>
         </div>
         <div class="game-properties">
-          <p class="time-elapsed">${timeElapsed(match['started'])}m ago</p>
+          <p>${timeElapsed(match['started'])}m ago</p>
           <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
           <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-          <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
+          <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
         </div>
       </div>
       </div>
@@ -434,8 +438,18 @@ function insertRecentlyCompletedGames (pastGbMatches){
   }
 }
 
+function sortGamesByTime (matches) {
+  console.log('matches to be sorted', matches)
+  sortedMatches = matches.sort((a, b) => b['opened']-a['opened'])
+  console.log('sorted matches', sortedMatches)
+  return sortedMatches
+}
+
 function insertLiveGames (liveGbMatches) {
   console.log('inserting live games...')
+
+  liveGbMatches = sortGamesByTime(liveGbMatches)
+
   stopLoadingAnimation('current-games-loader')
   insertPlayersIntoStatusTables(liveGbMatches)
   if (liveGbMatches.length === 0) {
@@ -500,10 +514,10 @@ function insertLiveGames (liveGbMatches) {
             <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="${team2Player1['country']} Flag">
           </div>
           <div class="game-properties">
-            <p class="time-elapsed">${timeElapsed(match['started'])}m ago</p>
+            <p>${timeElapsed(match['started'])}m ago</p>
             <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
             <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
           </div>
         </div>
         `)
@@ -552,10 +566,10 @@ function insertLiveGames (liveGbMatches) {
             <p>${team2EloAvg}</p>
           </div>
           <div class="game-properties">
-            <p class="time-elapsed">${timeElapsed(match['started'])}m ago</p>
+            <p>${timeElapsed(match['started'])}m ago</p>
             <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
             <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
+            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
           </div>
         </div>
       </div>`)
@@ -616,10 +630,10 @@ function insertLiveGames (liveGbMatches) {
             <p>${team2EloAvg}</p>
           </div>
           <div class="game-properties">
-            <p class="time-elapsed">${timeElapsed(match['started'])}m ago</p>
+            <p>${timeElapsed(match['started'])}m ago</p>
             <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
             <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
+            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
           </div>
         </div>
       </div>
@@ -693,10 +707,10 @@ function insertLiveGames (liveGbMatches) {
             <p>${team2EloAvg}</p>
           </div>
           <div class="game-properties">
-            <p class="time-elapsed">${timeElapsed(match['started'])}m ago</p>
+            <p>${timeElapsed(match['started'])}m ago</p>
             <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
             <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
+            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
           </div>
         </div>
       </div>
@@ -732,10 +746,8 @@ function insertPlayersIntoStatusTables(liveGbMatches) {
   keys = Object.keys(liveGbPlayers)
     keys.forEach((playerName) => {
       console.log(playerName,liveGbPlayers[playerName])
-      document.getElementById('player-table-body').insertAdjacentHTML("beforeend",
-      `<tr>
-        <td scope="row" class="left-align"><strong>${playerName}</strong> started a ${leaderboardTypes[liveGbPlayers[playerName]['leaderboard_id']]} ${timeElapsed(liveGbPlayers[playerName]['started'])}m ago</td>
-      </tr>`
+      document.getElementById('status-table').insertAdjacentHTML("beforeend",
+      `<p class="left-align light-weight"><strong>${playerName}</strong> started a ${leaderboardTypes[liveGbPlayers[playerName]['leaderboard_id']]} ${timeElapsed(liveGbPlayers[playerName]['started'])}m ago</p>`
       )
     })
   }
@@ -755,3 +767,5 @@ function stopLoadingAnimation(loadingIdentifier) {
   console.log(`stopping the ${loadingIdentifier} loading animation`)
   document.getElementById(loadingIdentifier).classList.toggle('display-none')
 }
+
+
