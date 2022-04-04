@@ -13,13 +13,15 @@
   <script src="script.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
-  <link href="https://fonts.googleapis.com/css2?family=Arimo&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@100;300&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/25dfb2bacb.js" crossorigin="anonymous"></script>
 </head>
 <body>
   
   <div class="navbar">
-    <span><h2>Logo</h2></span>
+    <span><img id="logo" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/aoe2gblogo.png" alt="logo"></span>
     <span><h1>GB AoE2 Dashboard Beta</h1></span>
     <span><h2>Info</h2></span>
   </div>
@@ -28,19 +30,35 @@
     <div class="lh-side">
       <div class="players">
         <h3 class="title center-align">Active Players</h3>
+        <div id="players-loader" class="loader">
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+          <div class="bar4"></div>
+          <div class="bar5"></div>
+          <div class="bar6"></div>
+        </div>
         <table class="table table-striped">
           <tbody id="player-table-body">
           </tbody>
         </table>
       </div>
       <div class="leaderboard">
-        <h3 class="title center-align">Leaderboard</h3>
+        <h3 class="title center-align">1V1 RM Leaderboard</h3>
+        <div id="leaderboard-loader" class="loader">
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+          <div class="bar4"></div>
+          <div class="bar5"></div>
+          <div class="bar6"></div>
+        </div>
         <div class="leaderboard-list">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col" class="left-align">Name</th>
-                <th scope="col" class="left-align">1v1 ELO</th>
+                <th scope="col" class="left-align"><strong>Name</strong></th>
+                <th scope="col" class="left-align"><strong>Elo</strong></th>
               </tr>
             </thead>
             <tbody class="player-table-body">
@@ -51,7 +69,7 @@
     </div>
     <div class="current-games">
       <h3 class="title center-align">Games in Progress</h3>
-      <div class="loader">
+      <div id="current-games-loader" class="loader">
         <div class="bar1"></div>
         <div class="bar2"></div>
         <div class="bar3"></div>
@@ -62,7 +80,7 @@
     </div>
     <div class="recently-completed-games">
       <h3 class="title center-align">Recently Completed Games</h3>
-      <div class="loader">
+      <div id="recently-completed-games-loader" class="loader">
         <div class="bar1"></div>
         <div class="bar2"></div>
         <div class="bar3"></div>
