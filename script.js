@@ -37,6 +37,8 @@ let community = [
 ]
 
 document.getElementById('about-btn').addEventListener('click', function() { document.getElementById('about-txt').classList.toggle("display-none") }, false);
+document.getElementById('status-btn').addEventListener('click', function() { document.getElementById('status-txt').classList.toggle("display-none") }, false);
+
 // Console log the error if initialiseStrings doesnt run
 initialiseStrings().catch( error => {
   console.log(error)
@@ -92,6 +94,12 @@ function filterCommunityLeaderboard (globalLeaderboard) {
 
 function insertPlayersIntoLeaderboard (gbLeaderboard) {
   stopLoadingAnimation('leaderboard-loader')
+  document.getElementById('table-head').insertAdjacentHTML("beforeend", 
+  `<tr>
+    <th scope="col" class="left-align"><strong>Name</strong></th>
+    <th scope="col" class="left-align"><strong>Elo</strong></th>
+  </tr>`
+  )
   gbLeaderboard.forEach((player) => {
     document.querySelector('.player-table-body').insertAdjacentHTML("beforeend", 
     `<tr>

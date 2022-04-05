@@ -45,6 +45,30 @@ td{
 	justify-content: space-between;
 }
 
+.navbar-buttons {
+	display: flex;
+	margin: 0px 8px;
+	padding: 0 8px;
+	align-items: center;
+}
+
+.navbar-buttons * {
+	margin: 0px 8px;
+}
+
+
+
+#about-btn:hover,
+#status-btn:hover {
+	color: white;
+	cursor: pointer;
+}
+
+#about-btn,
+#status-btn {
+	transition-duration: 250ms
+}
+
 .container {
 	background-color: var(--pagecolor);
 	display: flex;
@@ -402,12 +426,5 @@ td{
 	color: white;
 }
 
-#about-btn:hover {
-	color: white;
-	cursor: pointer;
-}
 
-#about-btn {
-	transition-duration: 250ms
-}
 
