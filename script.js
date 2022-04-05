@@ -1,4 +1,3 @@
-// testing automatic heroku deploys
 let timeStarted = Math.floor((Date.now()/1000))
 
 let civs = {}
@@ -7,7 +6,7 @@ let mapSizes = {}
 let gameTypes = {}
 let leaderboardTypes = {}
 let timeNow = Math.floor(Date.now()/1000)
-let threeHrsAgo = timeNow - 1800
+let thirtyMinsAgo = timeNow - 1800
 let liveGbMatches = []
 let pastGbMatches = []
 // liveGbPlayers is an object because I want both the player and the match they're currently in. Player is key, match is value
@@ -38,15 +37,14 @@ let community = [
 ]
 
 document.getElementById('about-btn').addEventListener('click', function() { document.getElementById('about-txt').classList.toggle("display-none") }, false);
-
-// Console log the error if populateCivs doesnt run
-populateCivs().catch( error => {
+// Console log the error if initialiseStrings doesnt run
+initialiseStrings().catch( error => {
   console.log(error)
   console.log("Write something in this function to say aoe2.net is done")
 })
 
   // Assigning civs, map types and map sizes from API to local memory so that I can get strings with just ID without any more API queries
-async function populateCivs () {
+async function initialiseStrings () {
   // not sure why I need 2 awaits in the line below. it breaks with just 1 
   const response = await (await fetch('https://aoe2.net/api/strings?game=aoe2de&language=en')).json()
   response['civ'].forEach((civ) => {
@@ -107,9 +105,9 @@ function insertPlayersIntoLeaderboard (gbLeaderboard) {
 getCurrentMatches()
 
 async function getCurrentMatches () {
-  console.log('getting current matches..', `https://aoe2.net/api/matches?game=aoe2de&count=1000&since=${threeHrsAgo}` )
+  console.log('getting current matches..', `https://aoe2.net/api/matches?game=aoe2de&count=1000&since=${thirtyMinsAgo}` )
   // fetch(`https://aoe2.net/api/matches?game=aoe2de&count=100&since=1647710738`)
-  fetch(`https://aoe2.net/api/matches?game=aoe2de&count=1000&since=${threeHrsAgo}`)
+  fetch(`https://aoe2.net/api/matches?game=aoe2de&count=1000&since=${thirtyMinsAgo}`)
   .then(response => response.json())
   .then(currentMatches => {
     console.log('current matches', currentMatches)
@@ -142,7 +140,7 @@ function filterCommunityMatches(globalMatches) {
   insertRecentlyCompletedGames(dedupedPastGbMatches)
 }
 // This function will take 1 match and split the players into their teams and sort them by colour
-function SortAndSplitPlayersIntoTeams(gbMatch) {
+function sortAndSplitPlayersIntoTeams(gbMatch) {
   
   let allPlayers = gbMatch['players']
   console.log('all players', allPlayers)
@@ -178,20 +176,20 @@ function insertRecentlyCompletedGames (pastGbMatches){
     `<p class="center-align">No games have been completed recently</p>`)
   } else {
     pastGbMatches.forEach((match) => {
-      let teams = SortAndSplitPlayersIntoTeams(match)
-      let team1 = teams[0]
-      let team2 = teams[1]
-      let team1Player1 = teams[0][0]
-      let team1Player2 = teams[0][1]
-      let team1Player3 = teams[0][2]
-      let team1Player4 = teams[0][3]
-      let team2Player1 = teams[1][0]
-      let team2Player2 = teams[1][1]
-      let team2Player3 = teams[1][2]
-      let team2Player4 = teams[1][3]
+      const teams = sortAndSplitPlayersIntoTeams(match)
+      const team1 = teams[0]
+      const team2 = teams[1]
+      const team1Player1 = teams[0][0]
+      const team1Player2 = teams[0][1]
+      const team1Player3 = teams[0][2]
+      const team1Player4 = teams[0][3]
+      const team2Player1 = teams[1][0]
+      const team2Player2 = teams[1][1]
+      const team2Player3 = teams[1][2]
+      const team2Player4 = teams[1][3]
 
-      let team1EloAvg = 0
-      let team2EloAvg = 0 
+      const team1EloAvg = 0
+      const team2EloAvg = 0 
       team1.forEach((player) => {
         team1EloAvg += player['rating']
       })
@@ -232,10 +230,10 @@ function insertRecentlyCompletedGames (pastGbMatches){
             <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="${team2Player1['country']} Flag">
           </div>
           <div class="game-properties">
-            <p>${timeElapsed(match['started'])}m ago</p>
-            <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
-            <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+          <p>${timeElapsed(match['started'])}m ago</p>
+          <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
+          <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
+          <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
           </div>
         </div>`)
       } else if (match['players'].length === 4) {
@@ -457,21 +455,21 @@ function insertLiveGames (liveGbMatches) {
     `<p class="center-align">No games have been started recently</p>`)
   } else {
     liveGbMatches.forEach((match) => {
-      let teams = SortAndSplitPlayersIntoTeams(match)
-      let team1 = teams[0]
-      let team2 = teams[1]
-      let team1Player1 = teams[0][0]
-      let team1Player2 = teams[0][1]
-      let team1Player3 = teams[0][2]
-      let team1Player4 = teams[0][3]
-      let team2Player1 = teams[1][0]
-      let team2Player2 = teams[1][1]
-      let team2Player3 = teams[1][2]
-      let team2Player4 = teams[1][3]
+      const teams = sortAndSplitPlayersIntoTeams(match)
+      const team1 = teams[0]
+      const team2 = teams[1]
+      const team1Player1 = teams[0][0]
+      const team1Player2 = teams[0][1]
+      const team1Player3 = teams[0][2]
+      const team1Player4 = teams[0][3]
+      const team2Player1 = teams[1][0]
+      const team2Player2 = teams[1][1]
+      const team2Player3 = teams[1][2]
+      const team2Player4 = teams[1][3]
       console.log('teams',teams)
       console.log('match', match)
-      let team1EloAvg = 0
-      let team2EloAvg = 0 
+      const team1EloAvg = 0
+      const team2EloAvg = 0 
 
       team1.forEach((player) => {
         team1EloAvg += player['rating']
@@ -716,7 +714,7 @@ function insertLiveGames (liveGbMatches) {
       </div>
       `)
       } else {
-        // code for odd number of players in a match
+        // code for odd number of players in a match. Only relevant for FFA
       }
     });
   }
@@ -730,9 +728,6 @@ function insertPlayersIntoStatusTables(liveGbMatches) {
       return community.some((communityPlayer) => {
         if (communityPlayer.steam_id === player.steam_id){
           liveGbPlayers[player['name']] = match
-          // console.log(player)
-          // console.log(match)
-          // console.log(liveGbPlayers[player])
         }
       });
     })
