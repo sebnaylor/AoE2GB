@@ -64,7 +64,15 @@ td{
 	margin: 0px 8px;
 }
 
+#about-txt {
+	padding: 4px 8px;
+	background-color: var(--sectioncolor);
+}
 
+#status-txt {
+	padding: 4px 8px;
+	background-color: var(--darksectioncolor);
+}
 
 #about-btn:hover,
 #status-btn:hover {
@@ -350,6 +358,7 @@ td{
 	display: flex;
 	justify-content: center;
 	max-width: 500px;
+	margin: 0 auto;
 }
 
 .country {
@@ -400,6 +409,7 @@ td{
 .game-properties {
 	display: flex;
 	justify-content: center;
+	margin: 0 auto;
 }
 
 .right-align {

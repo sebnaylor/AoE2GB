@@ -6,8 +6,8 @@ let mapSizes = {}
 let gameTypes = {}
 let leaderboardTypes = {}
 let timeNow = Math.floor(Date.now()/1000)
-// let thirtyMinsAgo = timeNow - 1800
-let thirtyMinsAgo = 1649191999
+let thirtyMinsAgo = timeNow - 1800
+// let thirtyMinsAgo = 1649191999
 let liveGbMatches = []
 let pastGbMatches = []
 // liveGbPlayers is an object because I want both the player and the match they're currently in. Player is key, match is value
@@ -243,7 +243,6 @@ function insertRecentlyCompletedGames (pastGbMatches){
             <p>${timeElapsed(match['started'])}m ago</p>
             <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
             <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
           </div>
         </div>`)
       } else if (match['players'].length === 4) {
@@ -294,7 +293,6 @@ function insertRecentlyCompletedGames (pastGbMatches){
             <p>${timeElapsed(match['started'])}m ago</p>
             <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
             <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
           </div>
         </div>
       </div>`)
@@ -358,7 +356,6 @@ function insertRecentlyCompletedGames (pastGbMatches){
           <p>${timeElapsed(match['started'])}m ago</p>
           <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
           <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-          <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
         </div>
       </div>
       `)
@@ -434,7 +431,6 @@ function insertRecentlyCompletedGames (pastGbMatches){
           <p>${timeElapsed(match['started'])}m ago</p>
           <p><i class="fa-solid fa-earth-americas"></i>${mapTypes[match['map_type']]}</p>
           <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-          <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a>
         </div>
       </div>
       </div>
