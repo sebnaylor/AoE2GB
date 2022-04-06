@@ -17,11 +17,10 @@ body {
 	min-height: 100vh;
 }
 
-body, html {
-  background-color: #1c2020;
-  height: 100%;
-  position: relative;
+html {
+	background-color: var(--pagecolor);
 }
+
 
 h1, h2, h3, h4, h5, h6, li, p, th, td, a {
 	font-family: 'Prompt', sans-serif;
@@ -39,10 +38,19 @@ td{
 	text-align: center;
 }
 
+.navbar-container {
+	background-color: var(--sectioncolor);
+	justify-content: space-between;
+	padding: 0px;
+}
+
 .navbar {
 	background-color: var(--sectioncolor);
 	display: flex;
 	justify-content: space-between;
+	max-width: 1920px;
+	margin: 0px auto;
+	
 }
 
 .navbar-buttons {
@@ -73,8 +81,9 @@ td{
 	background-color: var(--pagecolor);
 	display: flex;
 	justify-content: space-between;
-	margin: 0;
-	padding: 0;
+	margin: 0px auto;
+	padding: 0px;
+	max-width: 1920px;
 }
 
 .players {
@@ -301,6 +310,7 @@ td{
 	flex: 1;
 	min-height: 100vh;
 	padding: 4px;
+	min-width: 470px;
 }
 
 .live-game {
@@ -312,6 +322,7 @@ td{
 	justify-content: space-evenly;
 	padding: 8px 0px;
 	position: relative;
+	max-width: 550px;
 }
 
 .live-game * {
@@ -327,6 +338,7 @@ td{
 	display: flex;
 	justify-content: center;
 	max-width: 500px;
+	margin: 0px auto;
 }
 
 .game-header img {
@@ -370,6 +382,7 @@ td{
 	display: flex;
 	justify-content: center;
 	max-width: 500px;
+	margin: 0px auto;
 }
 
 .team-game-player {
@@ -381,6 +394,7 @@ td{
 
 .team-game-teams {
 	display: flex;
+	margin: 0px auto;
 }
 
 .game-properties {
@@ -406,6 +420,16 @@ td{
 .grid-container-team-2 {
 	display: grid;
 	grid-template-columns: 150px 30px 30px 30px;
+}
+
+.grid-container-1v1-team-1 {
+	display: grid;
+	grid-template-columns: 30px 30px 30px 130px;
+}
+
+.grid-container-1v1-team-2 {
+	display: grid;
+	grid-template-columns: 132px 30px 30px 30px;
 }
 
 .light-weight {

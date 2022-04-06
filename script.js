@@ -6,7 +6,8 @@ let mapSizes = {}
 let gameTypes = {}
 let leaderboardTypes = {}
 let timeNow = Math.floor(Date.now()/1000)
-let thirtyMinsAgo = timeNow - 1800
+// let thirtyMinsAgo = timeNow - 1800
+let thirtyMinsAgo = 1649191999
 let liveGbMatches = []
 let pastGbMatches = []
 // liveGbPlayers is an object because I want both the player and the match they're currently in. Player is key, match is value
@@ -196,8 +197,8 @@ function insertRecentlyCompletedGames (pastGbMatches){
       const team2Player3 = teams[1][2]
       const team2Player4 = teams[1][3]
 
-      const team1EloAvg = 0
-      const team2EloAvg = 0 
+      let team1EloAvg = 0
+      let team2EloAvg = 0 
       team1.forEach((player) => {
         team1EloAvg += player['rating']
       })
@@ -219,29 +220,30 @@ function insertRecentlyCompletedGames (pastGbMatches){
         document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
         `<div class="live-game">
           <div class="game-header">
-            <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]} civilisation">
-            <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
-            <h4>${team1Player1['name']}</h4>
+            <div class= "grid-container-1v1-team-1">  
+              <img id="country-flag" src=${countryCheck(team1Player1['country'])} alt="${team1Player1['country']} Flag">
+              <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]} civilisation">
+              <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
+              <h4 class="right-align">${team1Player1['name']}</h4>
+            </div>
             <h4>Vs</h4>
-            <h4>${team2Player1['name']}</h4>
-            <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
-            <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]} civilisation">
+            <div class="grid-container-1v1-team-2">
+              <h4 class="">${team2Player1['name']}</h4>
+              <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
+              <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]} civilisation">
+              <img id="country-flag" src=${countryCheck(team2Player1['country'])} alt="${team2Player1['country']} Flag">
+            </div>
           </div>
           <div class="elo">
             <p>${team1Player1['rating']}</p>
             <p>Elo</p>
             <p>${team2Player1['rating']}</p>
           </div>
-          <div class="country">
-            <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="${team1Player1['country']} Flag">
-            <p>Country</p>
-            <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="${team2Player1['country']} Flag">
-          </div>
           <div class="game-properties">
-          <p>${timeElapsed(match['started'])}m ago</p>
-          <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
-          <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-          <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+            <p>${timeElapsed(match['started'])}m ago</p>
+            <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
+            <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
+            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
           </div>
         </div>`)
       } else if (match['players'].length === 4) {
@@ -255,13 +257,13 @@ function insertRecentlyCompletedGames (pastGbMatches){
         <div class="team-game-teams">
           <div class="team-game-team-column">
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player1['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]}">
               <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
               <p>${team1Player1['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player2['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player2['civ']].toLowerCase()}.png" alt="${civs[team1Player2['civ']]}">
               <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
               <p>${team1Player2['name']}</p>
@@ -272,20 +274,20 @@ function insertRecentlyCompletedGames (pastGbMatches){
               <p>${team2Player1['name']}</p>
               <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player1['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player2['name']}</p>
               <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player2['civ']].toLowerCase()}.png" alt="${civs[team2Player2['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player2['country'])} alt="">
             </div>
           </div>
         </div>
         <div class="game-info">
           <div class="elo">
             <p>${team1EloAvg}</p>
-            <p>Elo (avg)</p>
+            <p>Elo</p>
             <p>${team2EloAvg}</p>
           </div>
           <div class="game-properties">
@@ -307,19 +309,19 @@ function insertRecentlyCompletedGames (pastGbMatches){
         <div class="team-game-teams">
           <div class="team-game-team-column">
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player1['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]}">
               <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
               <p>${team1Player1['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player2['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player2['civ']].toLowerCase()}.png" alt="${civs[team1Player2['civ']]}">
               <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
               <p>${team1Player2['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player3['country'].toLowerCase()}.png" alt="${civs[team1Player3['civ']]}">
+              <img id="country-flag" src=${countryCheck(team1Player3['country'])} alt="${civs[team1Player3['civ']]}">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player3['civ']].toLowerCase()}.png" alt="">
               <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
               <p>${team1Player3['name']}</p>
@@ -330,26 +332,26 @@ function insertRecentlyCompletedGames (pastGbMatches){
               <p>${team2Player1['name']}</p>
               <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player1['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player2['name']}</p>
               <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player2['civ']].toLowerCase()}.png" alt="${civs[team2Player2['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player2['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player3['name']}</p>
               <p class="player p${team2Player3['color']}">${team2Player3['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player3['civ']].toLowerCase()}.png" alt="${civs[team2Player3['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player3['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player3['country'])} alt="">
             </div>
           </div>
         </div>
         <div class="game-info">
         <div class="elo">
           <p>${team1EloAvg}</p>
-          <p>Elo (avg)</p>
+          <p>Elo</p>
           <p>${team2EloAvg}</p>
         </div>
         <div class="game-properties">
@@ -371,25 +373,25 @@ function insertRecentlyCompletedGames (pastGbMatches){
         <div class="team-game-teams">
           <div class="team-game-team-column">
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player1['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]}">
               <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
-              <p class="right-align">${team1Player1['name']}TEST2</p>
+              <p class="right-align">${team1Player1['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player2['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player2['civ']].toLowerCase()}.png" alt="${civs[team1Player2['civ']]}">
               <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
               <p class="right-align">${team1Player2['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player3['country'].toLowerCase()}.png" alt="${civs[team1Player3['civ']]}">
+              <img id="country-flag" src=${countryCheck(team1Player3['country'])} alt="${civs[team1Player3['civ']]}">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player3['civ']].toLowerCase()}.png" alt="">
               <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
               <p class="right-align">${team1Player3['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player4['country'].toLowerCase()}.png" alt="${civs[team1Player4['civ']]}">
+              <img id="country-flag" src=${countryCheck(team1Player4['country'])} alt="${civs[team1Player4['civ']]}">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player4['civ']].toLowerCase()}.png" alt="">
               <p class="player p${team1Player4['color']}">${team1Player4['color']}</p>
               <p class="right-align">${team1Player4['name']}</p>
@@ -400,32 +402,32 @@ function insertRecentlyCompletedGames (pastGbMatches){
               <p>${team2Player1['name']}</p>
               <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player1['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player2['name']}</p>
               <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player2['civ']].toLowerCase()}.png" alt="${civs[team2Player2['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player2['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player3['name']}</p>
               <p class="player p${team2Player3['color']}">${team2Player3['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player3['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player3['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player3['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player4['name']}</p>
               <p class="player p${team2Player4['color']}">${team2Player4['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player4['civ']].toLowerCase()}.png" alt="${civs[team2Player4['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player4['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player4['country'])} alt="">
             </div>
           </div>
         </div>
         <div class="game-info">
         <div class="elo">
           <p>${team1EloAvg}</p>
-          <p>Elo (avg)</p>
+          <p>Elo</p>
           <p>${team2EloAvg}</p>
         </div>
         <div class="game-properties">
@@ -476,8 +478,8 @@ function insertLiveGames (liveGbMatches) {
       const team2Player4 = teams[1][3]
       console.log('teams',teams)
       console.log('match', match)
-      const team1EloAvg = 0
-      const team2EloAvg = 0 
+      let team1EloAvg = 0
+      let team2EloAvg = 0 
 
       team1.forEach((player) => {
         team1EloAvg += player['rating']
@@ -497,36 +499,36 @@ function insertLiveGames (liveGbMatches) {
       if (match['players'].length % 2 != 0){
         exit
       } else if (match['players'].length === 2) {
-        console.log('bug',team2Player1)
+        console.log('bug',team1Player1)
         document.querySelector('.current-games').insertAdjacentHTML("beforeend",
         `<div class="live-game">
-          <div class="game-header">
+        <div class="game-header">
+          <div class= "grid-container-1v1-team-1">  
+            <img id="country-flag" src=${countryCheck(team1Player1['country'])} alt="${team1Player1['country']} Flag">
             <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]} civilisation">
             <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
-            <h4>${team1Player1['name']}</h4>
-            <h4>Vs</h4>
-            <h4>${team2Player1['name']}</h4>
+            <h4 class="right-align">${team1Player1['name']}</h4>
+          </div>
+          <h4>Vs</h4>
+          <div class="grid-container-1v1-team-2">
+            <h4 class="">${team2Player1['name']}</h4>
             <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
             <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]} civilisation">
-          </div>
-          <div class="elo">
-            <p>${team1Player1['rating']}</p>
-            <p>Elo</p>
-            <p>${team2Player1['rating']}</p>
-          </div>
-          <div class="country">
-            <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="${team1Player1['country']} Flag">
-            <p>Country</p>
-            <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="${team2Player1['country']} Flag">
-          </div>
-          <div class="game-properties">
-            <p>${timeElapsed(match['started'])}m ago</p>
-            <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
-            <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
-            <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+            <img id="country-flag" src=${countryCheck(team2Player1['country'])} alt="${team2Player1['country']} Flag">
           </div>
         </div>
-        `)
+        <div class="elo">
+          <p>${team1Player1['rating']}</p>
+          <p>Elo</p>
+          <p>${team2Player1['rating']}</p>
+        </div>
+        <div class="game-properties">
+          <p>${timeElapsed(match['started'])}m ago</p>
+          <p><i class="fa-solid fa-earth-americas"></i> ${mapTypes[match['map_type']]}
+          <p><i class="fa-solid fa-server"></i> ${match['server']}</p>
+          <a class="spectate-btn" href="https://aoe2.net/s/${match['match_id']}">Spectate</a></p>
+        </div>
+      </div>`)
       } else if (match['players'].length === 4) {
         document.querySelector('.current-games').insertAdjacentHTML("beforeend",
         `<div class="live-game">
@@ -538,13 +540,13 @@ function insertLiveGames (liveGbMatches) {
         <div class="team-game-teams">
           <div class="team-game-team-column">
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player1['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]}">
               <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
               <p class="right-align">${team1Player1['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player2['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player2['civ']].toLowerCase()}.png" alt="${civs[team1Player2['civ']]}">
               <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
               <p class="right-align">${team1Player2['name']}</p>
@@ -555,20 +557,20 @@ function insertLiveGames (liveGbMatches) {
               <p>${team2Player1['name']}</p>
               <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player1['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player2['name']}</p>
               <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player2['civ']].toLowerCase()}.png" alt="${civs[team2Player2['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player2['country'])} alt="">
             </div>
           </div>
         </div>
         <div class="game-info">
           <div class="elo">
             <p>${team1EloAvg}</p>
-            <p>Elo (avg)</p>
+            <p>Elo</p>
             <p>${team2EloAvg}</p>
           </div>
           <div class="game-properties">
@@ -590,19 +592,19 @@ function insertLiveGames (liveGbMatches) {
         <div class="team-game-teams">
           <div class="team-game-team-column">
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player1['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="${civs[team1Player1['civ']]}">
               <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
               <p class="right-align">${team1Player1['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player2['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player2['civ']].toLowerCase()}.png" alt="${civs[team1Player2['civ']]}">
               <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
               <p class="right-align">${team1Player2['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player3['country'].toLowerCase()}.png" alt="${civs[team1Player3['civ']]}">
+              <img id="country-flag" src=${countryCheck(team1Player3['country'])} alt="${civs[team1Player3['civ']]}">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player3['civ']].toLowerCase()}.png" alt="">
               <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
               <p class="right-align">${team1Player3['name']}</p>
@@ -613,26 +615,26 @@ function insertLiveGames (liveGbMatches) {
               <p>${team2Player1['name']}</p>
               <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player1['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player2['name']}</p>
               <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player2['civ']].toLowerCase()}.png" alt="${civs[team2Player2['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player2['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player3['name']}</p>
               <p class="player p${team2Player3['color']}">${team2Player3['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player3['civ']].toLowerCase()}.png" alt="${civs[team2Player3['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player3['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player3['country'])} alt="">
             </div>
           </div>
         </div>
         <div class="game-info">
           <div class="elo">
             <p>${team1EloAvg}</p>
-            <p>Elo (avg)</p>
+            <p>Elo</p>
             <p>${team2EloAvg}</p>
           </div>
           <div class="game-properties">
@@ -655,25 +657,25 @@ function insertLiveGames (liveGbMatches) {
         <div class="team-game-teams">
           <div class="team-game-team-column">
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player1['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player1['civ']].toLowerCase()}.png" alt="">
               <p class="player p${team1Player1['color']}">${team1Player1['color']}</p>
               <p class="right-align">${team1Player1['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team1Player2['country'])} alt="">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player2['civ']].toLowerCase()}.png" alt="${civs[team1Player2['civ']]}">
               <p class="player p${team1Player2['color']}">${team1Player2['color']}</p>
               <p class="right-align">${team1Player2['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player3['country'].toLowerCase()}.png" alt="${civs[team1Player3['civ']]}">
+              <img id="country-flag" src=${countryCheck(team1Player3['country'])} alt="${civs[team1Player3['civ']]}">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player3['civ']].toLowerCase()}.png" alt="">
               <p class="player p${team1Player3['color']}">${team1Player3['color']}</p>
               <p class="right-align">${team1Player3['name']}</p>
             </div>
             <div class="team-game-player grid-container-team-1">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team1Player4['country'].toLowerCase()}.png" alt="${civs[team1Player4['civ']]}">
+              <img id="country-flag" src=${countryCheck(team1Player4['country'])} alt="${civs[team1Player4['civ']]}">
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team1Player4['civ']].toLowerCase()}.png" alt="">
               <p class="player p${team1Player4['color']}">${team1Player4['color']}</p>
               <p class="right-align">${team1Player4['name']}</p>
@@ -684,32 +686,32 @@ function insertLiveGames (liveGbMatches) {
               <p>${team2Player1['name']}</p>
               <p class="player p${team2Player1['color']}">${team2Player1['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player1['civ']].toLowerCase()}.png" alt="${civs[team2Player1['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player1['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player1['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player2['name']}</p>
               <p class="player p${team2Player2['color']}">${team2Player2['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player2['civ']].toLowerCase()}.png" alt="${civs[team2Player2['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player2['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player2['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player3['name']}</p>
               <p class="player p${team2Player3['color']}">${team2Player3['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player3['civ']].toLowerCase()}.png" alt="${civs[team2Player3['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player3['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player3['country'])} alt="">
             </div>
             <div class="team-game-player grid-container-team-2">
               <p>${team2Player4['name']}</p>
               <p class="player p${team2Player4['color']}">${team2Player4['color']}</p>
               <img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Civs/${civs[team2Player4['civ']].toLowerCase()}.png" alt="${civs[team2Player4['civ']]}">
-              <img id="country-flag" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${team2Player4['country'].toLowerCase()}.png" alt="">
+              <img id="country-flag" src=${countryCheck(team2Player4['country'])} alt="">
             </div>
           </div>
         </div>
         <div class="game-info">
           <div class="elo">
             <p>${team1EloAvg}</p>
-            <p>Elo (avg)</p>
+            <p>Elo</p>
             <p>${team2EloAvg}</p>
           </div>
           <div class="game-properties">
@@ -771,4 +773,12 @@ function stopLoadingAnimation(loadingIdentifier) {
   document.getElementById(loadingIdentifier).classList.toggle('display-none')
 }
 
-
+function countryCheck(country) {
+  console.log(country)
+  if (country == null) {
+    console.log(country)
+    return `https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/undefined.png`
+  } else {
+    return `https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${country.toLowerCase()}.png`
+  }
+}
