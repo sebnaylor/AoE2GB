@@ -163,6 +163,7 @@ td{
 	justify-content: space-between;
 	max-width: 1520px;
 	margin: 0px auto;
+	align-items: center;
 	
 }
 
@@ -174,6 +175,7 @@ td{
 	height: 50px;
 	border-radius: 25px;
 	margin: 0px 10px;
+	padding: 2px;
 }
 
 .navbar-buttons {
