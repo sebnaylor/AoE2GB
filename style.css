@@ -17,6 +17,7 @@
 body {
 	margin: 0;
 	min-height: 100vh;
+	min-width: fit-content;
 }
 
 html {
@@ -42,7 +43,7 @@ td{
 	justify-content: space-between;
 	margin: 0px auto;
 	padding: 0px;
-	max-width: 1920px;
+	max-width: 1520px;
 }
 
 /* Reusable Styles */
@@ -160,7 +161,7 @@ td{
 	background-color: var(--sectioncolor);
 	display: flex;
 	justify-content: space-between;
-	max-width: 1920px;
+	max-width: 1520px;
 	margin: 0px auto;
 	
 }
@@ -365,7 +366,7 @@ td{
 	flex-direction: column;
 	margin: 8px auto;
 	justify-content: space-evenly;
-	padding: 8px 0px;
+	padding: 8px 8px;
 	position: relative;
 	max-width: 550px;
 }
