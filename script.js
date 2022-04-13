@@ -1,5 +1,17 @@
-let timeStarted = Math.floor((Date.now()/1000))
+//! INITIALISATIONS
 
+import {matchOutcome, timeElapsed, stopLoadingAnimation, countryCheck, insertPlayersIntoLeaderboard, sortGamesByTime, about, status} from "./functions.js"
+
+let community = []
+fetch('./community.json')
+  .then(function(resp){
+    return resp.json()
+  })
+  .then(function(data) {
+    console.log(data)
+    data['players'].forEach(player => {community.push(player)});
+  })
+let timeStarted = Math.floor((Date.now()/1000))
 let civs = {}
 let mapTypes = {}
 let mapSizes = {}
@@ -13,97 +25,52 @@ let pastGbMatches = []
 // liveGbPlayers is an object because I want both the player and the match they're currently in. Player is key, match is value
 let liveGbPlayers = {}
 // Setting the community steam IDs. Move this to a .env file before going live
-let community = [
-  {name:'AC', steam_id:'76561198803731676'},
-  {name:'Alfred', steam_id:'76561198122298655'},
-  {name:'Aten', steam_id:'76561198113813670'},
-  {name:'Aristocats', steam_id:'76561198041753213'},
-  {name:'Beanie', steam_id:'76561198203712612'},
-  {name:'Bot Marley', steam_id:'76561198056640339'},
-  {name:'CaptainO', steam_id:''},
-  {name:'Carlini', steam_id:''},
-  {name:'cdplayer', steam_id:'76561198010136971'},
-  {name:'Crouch', steam_id:'76561198924852470'},
-  {name:'Chris Pelham', steam_id:'76561199040121664'},
-  {name:'DanMT', steam_id:'76561198076329437'},
-  {name:'Darvoi', steam_id:'76561198067430187'},
-  {name:'dave', steam_id:'76561198140135453'},
-  {name:'Degaussed', steam_id:'76561198002663454'},
-  {name:'egg', steam_id:'76561198043890292'},
-  {name:'Fanjita', steam_id:'76561198001997423'},
-  {name:'Hallis', steam_id:'76561198061054857'},
-  {name:'Hot Beef', steam_id:'76561198025277826'},
-  {name:'IamMike_', steam_id:'76561198313552709'},
-  {name:'James', steam_id:'76561197972333869'},
-  {name:'JBR', steam_id:'76561198007478783'},
-  {name:'Kai', steam_id:'76561199091134095'},
-  {name:'King Boo', steam_id:'76561198245164292'},
-  {name:'Nathanael', steam_id:'76561197983443595'},
-  {name:'Nick', steam_id:''},
-  {name:'Pete26196', steam_id:'76561198088359350'},
-  {name:'RecoN', steam_id:'76561198134451129'},
-  {name:'Rhea', steam_id:'76561198259669186'},
-  {name:'Rgeadn', steam_id:'76561198033589758'},
-  {name:'robo_boro', steam_id:''},
-  {name:'Soltou', steam_id:'76561198813523983'},
-  {name:'Steak', steam_id:'76561198040347770'},
-  {name:'Squeaker', steam_id:'76561198124562338'},
-  {name:'Tarsiz', steam_id:''},
-  {name:'Tea', steam_id:'76561198109315523'},
-  {name:'The_Fish', steam_id:'76561198005323416'},
-  {name:'TheMole', steam_id:''},
-  {name:'Toady', steam_id:'76561198029951106'},
-  {name:'Unrivalled Super Hottie', steam_id:'76561197995194212'},
-  {name:'willdbeast', steam_id:'76561198119545611'},
-  {name:'Wuffles', steam_id:''},
-  {name:'YoungPanda95', steam_id:''},
-]
 
-document.getElementById('about-btn').addEventListener('click', function() { document.getElementById('about-txt').classList.toggle("display-none") }, false);
-document.getElementById('status-btn').addEventListener('click', function() { document.getElementById('status-txt').classList.toggle("display-none") }, false);
+// Navbar buttons imported from script
+about
+status
 
-// Console log the error if initialiseStrings doesnt run
-initialiseStrings().catch( error => {
-  console.log(error)
-  console.log("aoe2.net api is down")
-})
+initialiseStrings().catch( error => {console.log("aoe2.net api is down", error)})
 
-  // Assigning civs, map types and map sizes from API to local memory so that I can get strings with just ID without any more API queries
 async function initialiseStrings () {
-  // not sure why I need 2 awaits in the line below. it breaks with just 1 
   const response = await (await fetch('https://aoe2.net/api/strings?game=aoe2de&language=en')).json()
-  response['civ'].forEach((civ) => {
-    civs[civ['id']] = civ['string']
-  });
-  response['map_type'].forEach((mapType) => {
-    mapTypes[mapType['id']] = mapType['string']
-  });
-  response['map_size'].forEach((mapSize) => {
-    mapSizes[mapSize['id']] = mapSize['string']
-  });
-  response['game_type'].forEach((gameType) =>{
-    gameTypes[gameType['id']] = gameType['string']
-  });
-  response['leaderboard'].forEach((leaderboardType) =>{
-    leaderboardTypes[leaderboardType['id']] = leaderboardType['string']
-  })
+  response['civ'].forEach((civ) => {civs[civ['id']] = civ['string']});
+  response['map_type'].forEach((mapType) => {mapTypes[mapType['id']] = mapType['string']});
+  response['map_size'].forEach((mapSize) => {mapSizes[mapSize['id']] = mapSize['string']});
+  response['game_type'].forEach((gameType) => {gameTypes[gameType['id']] = gameType['string']});
+  response['leaderboard'].forEach((leaderboardType) => {leaderboardTypes[leaderboardType['id']] = leaderboardType['string']})
 }
+
+getLeaderboard().catch( error => {console.log(error)})
 
 console.log('civs', civs)
 console.log('map types', mapTypes)
 console.log('mapSizes', mapSizes)
 console.log('gameTypes', gameTypes)
 console.log('leaderboardTypes', leaderboardTypes)
-  
-getLeaderboard().catch( error => {
-  console.log(error)
-})
+
+//! API REQUESTS
 
 async function getLeaderboard () {
   const response = await (await fetch('https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=1&count=10000')).json()
   let globalLeaderboard = response['leaderboard']
   filterCommunityLeaderboard(globalLeaderboard)
 }
+
+getCurrentMatches().catch( error => {console.log(error)})
+
+async function getCurrentMatches () {
+  fetch(`https://aoe2.net/api/matches?game=aoe2de&count=1000&since=${thirtyMinsAgo}`)
+  .then(response => response.json())
+  .then(currentMatches => {
+    console.log('current matches', currentMatches)
+    filterCommunityMatches(currentMatches)
+  });
+}
+
+
+
+//! FILTERING 
 
 // this function wil take the community and a global leaderboard and filter to only show community players
 function filterCommunityLeaderboard (globalLeaderboard) {
@@ -116,34 +83,6 @@ function filterCommunityLeaderboard (globalLeaderboard) {
   console.log('gbLeaderboard', gbLeaderboard)
 }
 
-function insertPlayersIntoLeaderboard (gbLeaderboard) {
-  stopLoadingAnimation('leaderboard-loader')
-  document.getElementById('table-head').insertAdjacentHTML("beforeend", 
-  `<tr>
-    <th scope="col" class="left-align light-weight">Name</th>
-    <th scope="col" class="left-align light-weight">Elo</th>
-  </tr>`
-  )
-  gbLeaderboard.forEach((player) => {
-    document.querySelector('.player-table-body').insertAdjacentHTML("beforeend", 
-    `<tr>
-      <th scope="row" class="left-align player-name leaderboard-player">${player['name']}</th>
-      <td class="leaderboard-elo">${player['rating']}</td>
-    </tr>`
-    );
-  });
-}
-
-getCurrentMatches()
-
-async function getCurrentMatches () {
-  fetch(`https://aoe2.net/api/matches?game=aoe2de&count=1000&since=${thirtyMinsAgo}`)
-  .then(response => response.json())
-  .then(currentMatches => {
-    console.log('current matches', currentMatches)
-    filterCommunityMatches(currentMatches)
-  });
-}
 // this function wil take the community and a global list of current matches and filter to only show matches with community players
 function filterCommunityMatches(globalMatches) {
   globalMatches.forEach((match) => {
@@ -159,8 +98,8 @@ function filterCommunityMatches(globalMatches) {
     });
   });
   // the line below removes duplicate matches (where 2 or more community members are playing in the same match)
-  dedupedLiveGbMatches = [...new Set(liveGbMatches)]
-  dedupedPastGbMatches = [...new Set(pastGbMatches)]
+  const dedupedLiveGbMatches = [...new Set(liveGbMatches)]
+  const dedupedPastGbMatches = [...new Set(pastGbMatches)]
   console.log('Live GB Matches: ', dedupedLiveGbMatches)
   console.log('Past GB Matches: ', dedupedPastGbMatches)
   insertLiveGames(dedupedLiveGbMatches)
@@ -193,13 +132,14 @@ function sortAndSplitPlayersIntoTeams(gbMatch) {
   return [team1, team2]
 }
 
+//! INSERT HTML
+
 function insertRecentlyCompletedGames (pastGbMatches){
   sortGamesByTime(pastGbMatches)
   stopLoadingAnimation('recently-completed-games-loader')
-  console.log(pastGbMatches)
   if (pastGbMatches.length === 0) {
     document.querySelector('.recently-completed-games').insertAdjacentHTML("beforeend",
-    `<p class="center-align">No games have been completed recently</p>`)
+    `<p class="center-align">No games have finished recently</p>`)
   } else {
     pastGbMatches.forEach((match) => {
       const teams = sortAndSplitPlayersIntoTeams(match)
@@ -448,15 +388,10 @@ function insertRecentlyCompletedGames (pastGbMatches){
       </div>
       `)
       } else {
-        // code for odd number of players in a match
+        console.log('FFA')
       }
     });
   }
-}
-
-function sortGamesByTime (matches) {
-  sortedMatches = matches.sort((a, b) => b['opened']-a['opened'])
-  return sortedMatches
 }
 
 function insertLiveGames (liveGbMatches) {
@@ -466,7 +401,7 @@ function insertLiveGames (liveGbMatches) {
   insertPlayersIntoStatusTables(liveGbMatches)
   if (liveGbMatches.length === 0) {
     document.querySelector('.current-games').insertAdjacentHTML("beforeend",
-    `<p class="center-align">No games have been started recently</p>`)
+    `<p class="center-align">No games have started recently</p>`)
   } else {
     liveGbMatches.forEach((match) => {
       const teams = sortAndSplitPlayersIntoTeams(match)
@@ -483,13 +418,9 @@ function insertLiveGames (liveGbMatches) {
       let team1EloAvg = 0
       let team2EloAvg = 0 
 
-      team1.forEach((player) => {
-        team1EloAvg += player['rating']
-      })
+      team1.forEach((player) => {team1EloAvg += player['rating']})
       team1EloAvg = Math.floor(team1EloAvg/team1.length)
-      team2.forEach((player) => {
-        team2EloAvg += player['rating']
-      })
+      team2.forEach((player) => {team2EloAvg += player['rating']})
       team2EloAvg = Math.floor(team2EloAvg/team2.length)
 
       if (match['players'].length % 2 != 0){
@@ -741,41 +672,11 @@ function insertPlayersIntoStatusTables(liveGbMatches) {
     document.querySelector('.players').insertAdjacentHTML("beforeend",
     `<p class="center-align no-players">No players have started a game recently</p>`)
   } else {
-  keys = Object.keys(liveGbPlayers)
+  const keys = Object.keys(liveGbPlayers)
     keys.forEach((playerName) => {
       document.getElementById('status-table').insertAdjacentHTML("beforeend",
       `<p class="left-align light-weight status-player"><strong>${playerName}</strong> started a ${leaderboardTypes[liveGbPlayers[playerName]['leaderboard_id']]} ${timeElapsed(liveGbPlayers[playerName]['started'])}m ago</p>`
       )
     })
   }
-}
-
-
-// this function takes a start time and returns the time in minutes since the start time
-function timeElapsed (startedTime) {
-  const timeElapsed = Math.floor(((Date.now()/1000) - startedTime)/60)
-  return timeElapsed
-}
-
-// loading identifier is name of the section 
-function stopLoadingAnimation(loadingIdentifier) {
-  document.getElementById(loadingIdentifier).classList.toggle('display-none')
-}
-
-function countryCheck(country) {
-  if (country == null) {
-    console.log('undefined country', country)
-    return `https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/undefined.png`
-  } else {
-    return `https://aoe2gb.s3.eu-west-2.amazonaws.com/images/Flags/${country.toLowerCase()}.png`
-  }
-}
-
-function matchOutcome(player) {
-  if(player['won'] === true) {
-    return "victor"
-  } else {
-    return "loser"
-  }
-
 }
