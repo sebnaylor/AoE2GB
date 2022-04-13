@@ -50,7 +50,16 @@ function sortGamesByTime (matches) {
     return sortedMatches
 }
 
+function ladderTypeGrammar (mapType) {
+  if (mapType === "Unranked") {
+    return "an Unranked"
+  } else if (mapType === undefined) {
+    return "an Undefined Game"
+  } else {
+  return `a ${mapType}`}
+}
+
 const about = document.getElementById('about-btn').addEventListener('click', function() { document.getElementById('about-txt').classList.toggle("display-none") }, false);
 const status = document.getElementById('status-btn').addEventListener('click', function() { document.getElementById('status-txt').classList.toggle("display-none") }, false);
 
-export {matchOutcome, timeElapsed, stopLoadingAnimation, countryCheck, insertPlayersIntoLeaderboard, sortGamesByTime, about, status}
+export {matchOutcome, timeElapsed, stopLoadingAnimation, countryCheck, insertPlayersIntoLeaderboard, sortGamesByTime, about, status, ladderTypeGrammar}

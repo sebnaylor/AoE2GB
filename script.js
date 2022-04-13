@@ -1,6 +1,6 @@
 //! INITIALISATIONS
 
-import {matchOutcome, timeElapsed, stopLoadingAnimation, countryCheck, insertPlayersIntoLeaderboard, sortGamesByTime, about, status} from "./functions.js"
+import {matchOutcome, timeElapsed, stopLoadingAnimation, countryCheck, insertPlayersIntoLeaderboard, sortGamesByTime, about, status, ladderTypeGrammar} from "./functions.js"
 
 let community = []
 fetch('./community.json')
@@ -675,7 +675,7 @@ function insertPlayersIntoStatusTables(liveGbMatches) {
   const keys = Object.keys(liveGbPlayers)
     keys.forEach((playerName) => {
       document.getElementById('status-table').insertAdjacentHTML("beforeend",
-      `<p class="left-align light-weight status-player"><strong>${playerName}</strong> started a ${leaderboardTypes[liveGbPlayers[playerName]['leaderboard_id']]} ${timeElapsed(liveGbPlayers[playerName]['started'])}m ago</p>`
+      `<p class="left-align light-weight status-player"><strong>${playerName}</strong> started ${ladderTypeGrammar(leaderboardTypes[liveGbPlayers[playerName]['leaderboard_id']])} ${timeElapsed(liveGbPlayers[playerName]['started'])}m ago</p>`
       )
     })
   }
