@@ -52,9 +52,14 @@ console.log('leaderboardTypes', leaderboardTypes)
 //! API REQUESTS
 
 async function getLeaderboard () {
-  const response = await (await fetch('https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=1&count=10000')).json()
-  let globalLeaderboard = response['leaderboard']
+  const responseTop10k = await (await fetch('https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=1&count=10000')).json()
+  let globalLeaderboard = responseTop10k['leaderboard']
+  const response10kTo20k = await (await fetch('https://aoe2.net/api/leaderboard?game=aoe2de&leaderboard_id=3&start=10001&count=10000')).json()
+  response10kTo20k['leaderboard'].forEach(player => {
+    globalLeaderboard.push(player)
+  });
   filterCommunityLeaderboard(globalLeaderboard)
+  console.log('Global Leaderboard', globalLeaderboard)
 }
 
 getCurrentMatches().catch( error => {console.log(error)})
