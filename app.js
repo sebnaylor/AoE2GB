@@ -1,10 +1,10 @@
 const express = require('express')
-
 const app = express()
+const port = 3000
 
 app.set('view engine', 'ejs')
 
-app.listen(3000)
+app.listen(port)
 
 app.use(express.static('public'))
 
