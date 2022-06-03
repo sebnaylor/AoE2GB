@@ -1,1 +1,35 @@
-<!-- paste nav bar in here -->
+
+<div class="navbar-container">
+    <div class="navbar">
+        <span><img id="logo" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/aoe2gblogo.png" alt="logo"></span>
+        <span><h1>GB AoE2 Dashboard</h1></span>
+        <div class="navbar-buttons">
+			<span><a href="./"><h3 class="nav-btn">Dashboard</h3></a></span>
+			<span><h3 id="status-btn" class="nav-btn">Status</h3></span>
+			<span><a href="./about"><h3 id="about-btn" class="nav-btn">About</h3></a></span>
+			<% if (user == null) {%> 
+			<span><a class="nav-btn" href="http://localhost:3000/api/auth/steam">
+				<img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/steam_sign_on.png">
+			</a></span>
+			<%} else { %>
+				<span> <h3 class="nav-btn"><%= user._json.personaname %> </h3></span>
+				<span><img src="<%= user._json.avatarmedium %>" alt=""></span>
+			<% } %>   
+        </div>
+    </div>
+</div>
+
+<div id="about-txt" class="display-none">
+	<p>This website automatically refreshes every 2 minutes. Please message me on discord (Rhea#2574) if you have any questions. 
+    Data is sourced from AoE2.net APIs. Due to conditons from AoE2.net, only games started in the last 30 mins can be shown.
+    <i class="fa-brands fa-github"></i> <a href="https://github.com/sebnaylor/AoE2GB" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+    </p>
+	<p>Age of Empires II: Definitive Edition © Microsoft Corporation. GBAoE2.net was created under Microsoft's <a href="https://www.xbox.com/en-US/developers/rules">
+		Game Content Usage Rules</a> using assets from Age of Empires II: Definitive Edition, and it is not endorsed by or affiliated with Microsoft.
+	</p>
+</div>
+
+<div id="status-txt" class="display-none">
+    <p>Site not loading? If <a href="https://aoe2.net/" target="_blank" rel="noopener noreferrer">aoe2.net</a> is down or slow, this site will be too</p>
+    </p>
+</div>
