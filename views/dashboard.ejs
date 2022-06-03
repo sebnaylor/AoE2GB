@@ -1,0 +1,65 @@
+<%- include('./partials/head.ejs') %>
+<body>
+
+	<%- include('./partials/nav.ejs') %>
+
+  <div class="container">
+    <div class="lh-side">
+      <h3 class="title center-align">Active Players</h3>
+      <div class="players">
+        <div id="players-loader" class="loader">
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+          <div class="bar4"></div>
+          <div class="bar5"></div>
+          <div class="bar6"></div>
+        </div>
+        <div id="status-table" class="table">
+        </div>
+      </div>
+      <div class="leaderboard">
+        <h3 class="title center-align">1V1 RM Leaderboard</h3>
+        <div id="leaderboard-loader" class="loader">
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+          <div class="bar4"></div>
+          <div class="bar5"></div>
+          <div class="bar6"></div>
+        </div>
+        <div class="leaderboard-list">
+          <table id="leaderboard-table">
+            <thead id="table-head">
+            </thead>
+            <tbody class="player-table-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="current-games">
+      <h3 class="title center-align">Games in Progress</h3>
+      <div id="current-games-loader" class="loader">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+        <div class="bar4"></div>
+        <div class="bar5"></div>
+        <div class="bar6"></div>
+      </div>
+    </div>
+    <div class="recently-completed-games">
+      <h3 class="title center-align">Recently Completed Games</h3>
+      <div id="recently-completed-games-loader" class="loader">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+        <div class="bar4"></div>
+        <div class="bar5"></div>
+        <div class="bar6"></div>
+      </div>
+    </div>
+  </div> 
+</body>
+</html>

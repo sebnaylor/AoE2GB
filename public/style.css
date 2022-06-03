@@ -199,14 +199,15 @@ td{
 	background-color: var(--darksectioncolor);
 }
 
-#about-btn:hover,
-#status-btn:hover {
+.nav-btn:hover,
+.nav-btn:hover {
 	color: white;
 	cursor: pointer;
 }
 
-#about-btn,
-#status-btn {
+.nav-btn,
+.nav-btn {
+	text-decoration: none;
 	transition-duration: 250ms
 }
 
