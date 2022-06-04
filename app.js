@@ -23,6 +23,8 @@ passport.deserializeUser(function(user, done) {
 //   credentials (in this case, an OpenID identifier and profile), and invoke a
 //   callback with a user object.
 passport.use(new SteamStrategy({
+    // returnURL: 'https://gbaoe2-test.herokuapp.com/',
+    // realm: 'https://gbaoe2-test.herokuapp.com/',
     returnURL: 'http://localhost:' + port + '/api/auth/steam/return',
     realm: 'http://localhost:' + port + '/',
     apiKey: 'BBE9946D7BFD4BA31BBD0F168E2F4E71'
