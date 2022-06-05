@@ -27,7 +27,7 @@ passport.use(new SteamStrategy({
     realm: 'https://gbaoe2-test.herokuapp.com/',
     // returnURL: 'http://localhost:' + port + '/api/auth/steam/return',
     // realm: 'http://localhost:' + port + '/',
-    apiKey: 'BBE9946D7BFD4BA31BBD0F168E2F4E71'
+    apiKey: '317048FFC3B5532835BE3D8373856C6A'
 }, function (identifier, profile, done) {
     process.nextTick(function () {
         profile.identifier = identifier;
