@@ -193,7 +193,7 @@ td{
 }
 
 .navbar-buttons * {
-	margin: 0px 8px;
+	margin: -8px 8px;
 }
 
 #about-txt {
