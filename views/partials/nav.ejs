@@ -4,16 +4,16 @@
         <span><img id="logo" src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/aoe2gblogo.png" alt="logo"></span>
         <span><h1>GB AoE2 Dashboard</h1></span>
         <div class="navbar-buttons">
-			<span><a href="./"><h3 class="nav-btn">Dashboard</h3></a></span>
-			<span><h3 id="status-btn" class="nav-btn">Status</h3></span>
-			<span><a href="./about"><h3 id="about-btn" class="nav-btn">About</h3></a></span>
+			<span><a href="../"><h3 class="nav-btn">Dashboard</h3></a></span>
+			<span><a href="../profile/292104"><h3 class="nav-btn">Profile</h3></a></span>
+			<span><a href="../about"><h3 id="about-btn" class="nav-btn">About</h3></a></span>
 			<% if (user == null) {%> 
 			<span><a class="nav-btn" href="http://localhost:3000/api/auth/steam">
 				<img src="https://aoe2gb.s3.eu-west-2.amazonaws.com/images/steam_sign_on.png">
 			</a></span>
 			<%} else { %>
 				<span> <h3 class="nav-btn"><%= user._json.personaname %> </h3></span>
-				<span><img src="<%= user._json.avatarmedium %>" alt=""></span>
+				<span><img src="<%= user._json.avatarmedium %>" alt="" class="center-align"></span>
 			<% } %>   
         </div>
     </div>

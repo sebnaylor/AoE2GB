@@ -31,18 +31,24 @@ h1, h2, h3, h4, h5, h6, li, p, th, td, a {
 	color: #C8C8C8;
 	margin: 0;
 	padding: 0;
+	text-decoration: none;
 }
 
 td{
 	width: 100px;
 }
 
-.container {
+.dashboard-container {
 	background-color: var(--pagecolor);
 	display: flex;
 	justify-content: space-between;
 	margin: 0px auto;
 	padding: 0px;
+	max-width: 1520px;
+}
+
+.text-container {
+	margin: 8px auto;
 	max-width: 1520px;
 }
 
@@ -69,6 +75,11 @@ td{
 .player-name {
 	overflow: hidden;
     text-overflow: ellipsis;
+	opacity: 0.8;
+}
+
+.player-name:hover {
+	opacity: 1;
 }
 
 .loader {
@@ -166,10 +177,6 @@ td{
 	align-items: center;
 	
 }
-
-.title {
-	font-weight: 100;
-  }
   
 #logo {
 	height: 50px;
@@ -254,6 +261,7 @@ td{
 
 .leaderboard-elo {
 	padding: 2px;
+	font-weight: 100;
 }
 
 #status-table>p:nth-child(odd) {
@@ -362,7 +370,7 @@ td{
 	min-width: 470px;
 }
 
-.live-game {
+.game {
 	background-color: var(--sectioncolor);
 	border-radius: 5px;
 	display: flex;
@@ -374,11 +382,11 @@ td{
 	max-width: 550px;
 }
 
-.live-game * {
+.game * {
 	margin: 0px 8px;
 }
 
-.live-game img {
+.game img {
 	width: 25px;
 	height: 25px;
 }
@@ -453,13 +461,13 @@ td{
 	margin: 0 auto;
 }
 
-.grid-container-team-1 {
+.grid-container-tg-team-1 {
 	display: grid;
 	grid-template-columns: 30px 30px 30px 150px;
 	align-items: center;
 }
 
-.grid-container-team-2 {
+.grid-container-tg-team-2 {
 	display: grid;
 	grid-template-columns: 150px 30px 30px 30px;
 	align-items: center;
@@ -473,7 +481,7 @@ td{
 
 .grid-container-1v1-team-2 {
 	display: grid;
-	grid-template-columns: 132px 30px 30px 30px;
+	grid-template-columns: 130px 30px 30px 30px;
 	align-items: center;
 }
 
@@ -492,7 +500,7 @@ td{
 }
 
 .victor {
-	color: #008917;
+	color: var(--p3color)
 }
 
 .loser {

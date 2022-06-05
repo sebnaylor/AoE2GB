@@ -1,11 +1,11 @@
-<%- include('./partials/head.ejs') %>
+<%- include('./partials/dashboardHead.ejs') %>
 <body>
 
 	<%- include('./partials/nav.ejs') %>
 
-  <div class="container">
+  <div class="dashboard-container">
     <div class="lh-side">
-      <h3 class="title center-align">Active Players</h3>
+      <h3 class="center-align">Active Players</h3>
       <div class="players">
         <div id="players-loader" class="loader">
           <div class="bar1"></div>
@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="leaderboard">
-        <h3 class="title center-align">1V1 RM Leaderboard</h3>
+        <h3 class="center-align">1V1 RM Leaderboard</h3>
         <div id="leaderboard-loader" class="loader">
           <div class="bar1"></div>
           <div class="bar2"></div>
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="current-games">
-      <h3 class="title center-align">Games in Progress</h3>
+      <h3 class="center-align">Games in Progress</h3>
       <div id="current-games-loader" class="loader">
         <div class="bar1"></div>
         <div class="bar2"></div>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="recently-completed-games">
-      <h3 class="title center-align">Recently Completed Games</h3>
+      <h3 class="center-align">Recently Completed Games</h3>
       <div id="recently-completed-games-loader" class="loader">
         <div class="bar1"></div>
         <div class="bar2"></div>
