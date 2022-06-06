@@ -2,9 +2,8 @@ const express = require('express')
 const passport = require('passport');
 const session = require('express-session');
 const passportSteam = require('passport-steam');
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
 const User = require('./models/user')
-const util = require('util')
 
 const SteamStrategy = passportSteam.Strategy;
 const port = process.env.PORT || 3000
@@ -48,9 +47,6 @@ app.use(session({
     resave: false,
     saveUninitialized: true}));
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Initialize Passport!  Also use passport.session() middleware, to support
 // persistent login sessions (recommended).
 app.use(passport.initialize());
@@ -77,10 +73,10 @@ app.get('/api/auth/steam/return', passport.authenticate('steam', {failureRedirec
 app.listen(port)
 
 // connect to MongoDB
-const dbURI = 'mongodb+srv://sebnaylor:tufnell123@gbaoe2.egedr.mongodb.net/gbaoe2?retryWrites=true&w=majority'
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    // .then((result) => app.listen(port))
-    .catch((err) => console.log(err))
+// const dbURI = 'mongodb+srv://sebnaylor:tufnell123@gbaoe2.egedr.mongodb.net/gbaoe2?retryWrites=true&w=majority'
+// mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+//     // .then((result) => app.listen(port))
+//     .catch((err) => console.log(err))
 
 app.get('/', (req, res) => {
     console.log("req.user in app.get '/'", req.user)
