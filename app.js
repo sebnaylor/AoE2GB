@@ -3,7 +3,8 @@ const passport = require('passport');
 const session = require('express-session');
 const passportSteam = require('passport-steam');
 // const mongoose = require('mongoose')
-const User = require('./models/user')
+// const User = require('./models/user')
+const cors = require('cors')
 
 const SteamStrategy = passportSteam.Strategy;
 const port = process.env.PORT || 3000
@@ -36,6 +37,8 @@ passport.use(new SteamStrategy({
 ));
 
 const app = express()
+
+app.use(cors())
 
 // configure express to look for views in public
 app.set('view engine', 'ejs')
