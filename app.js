@@ -27,7 +27,7 @@ passport.use(new SteamStrategy({
     realm: 'https://gbaoe2.net/',
     // returnURL: 'http://localhost:' + port + '/api/auth/steam/return',
     // realm: 'http://localhost:' + port + '/',
-    apiKey: 'EADEC7BBE35108908A296304A3FC3BC3'
+    apiKey: '1BC83531300B8A60F5FF965FAFF055E4'
 }, function (identifier, profile, done) {
     process.nextTick(function () {
         profile.identifier = identifier;
